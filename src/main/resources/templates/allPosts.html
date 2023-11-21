@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
+    <style>
+        .container{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;;
+            gap: 10px;
+        }
+
+        .item{
+            border: 1px solid black;
+            height: 25vh;
+        }
+    </style>
+    <title>Home</title>
+</head>
+<body>
+<div class="container">
+    <div class="item" th:each="post : ${posts}" >
+        <h5 th:text="${post.title}" ></h5>
+        <p th:text="${post.excerpt}"></p>
+        <p th:text="${post.createdAt}"></p>
+        <a th:href="@{/viewPost/{postId}(postId=${post.id})}"> View</a>
+    </div>
+</div>
+
+</body>
+</html>
