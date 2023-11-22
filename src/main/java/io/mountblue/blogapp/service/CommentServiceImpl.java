@@ -28,4 +28,24 @@ public class CommentServiceImpl implements CommentService{
             commentRepository.save(comment);
         }
     }
+
+    @Override
+    public void deleteCommentById(int commentId) {
+        commentRepository.deleteById(commentId);
+    }
+
+    @Override
+    public Comment getCommentById(int commentId) {
+        Optional<Comment> commentOptional = commentRepository.findById(commentId);
+        return commentOptional.orElse(null);
+    }
+
+    @Override
+    public void updateComment(Comment comment, int postId) {
+        Comment commentById = getCommentById(comment.getId());
+        comment.setName(commentById.getName());
+        comment.setEmail(commentById.getEmail());
+        comment.setCreatedAt(commentById.getCreatedAt());
+        saveComment(comment,postId);
+    }
 }

@@ -60,7 +60,6 @@ public class PostController {
     @PostMapping("/updatePost/{postId}")
     public String updatePost(@ModelAttribute("post") Post post, @PathVariable("postId") int postId, @ModelAttribute("tagString") String tagString, @RequestParam("tagStr") String tagStr){
         post.setId(postId);
-        System.out.println("Tags: " + tagString +" :::::::: "+tagStr);
         postService.savePost(post, tagStr);
         return "successPage";
     }

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Comment</title>
+</head>
+<body>
+<form th:action="@{/updateComment/{postId}/{commentId}(postId=${postId},commentId=${com.id})}" th:object="${com}" method="POST">
+<!--  Name: <input type="text" th:field="*{name}"/>-->
+<!--  Email: <input type="text" th:field="*{email}"/>-->
+  Comment: <input type="text" th:field="*{comment}"/>
+  <input type="submit" value="Submit">
+
+</form>
+
+
+</body>
+</html>

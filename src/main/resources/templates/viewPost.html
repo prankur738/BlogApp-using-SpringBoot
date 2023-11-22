@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>View</title>
@@ -25,7 +25,8 @@
         <p th:text="${com.name}"></p>
         <p th:text="${com.email}"></p>
         <p th:text="${com.createdAt}"></p>
-
+        <a th:href="@{/editComment/{postId}/{commentId}(postId=${post.id},commentId=${com.id})}"><button>Edit</button></a>
+        <a th:href="@{/deleteComment/{postId}/{commentId}(postId=${post.id},commentId=${com.id})}"><button>Delete</button></a>
     </div>
 </div>
 <form th:action="@{/saveComment/{postId}(postId=${post.id})}" th:object="${com}" method="POST">
