@@ -1,38 +1,62 @@
 package io.mountblue.blogapp.service;
 
+import io.mountblue.blogapp.entity.Comment;
 import io.mountblue.blogapp.entity.Post;
+import io.mountblue.blogapp.entity.Tag;
+import io.mountblue.blogapp.repository.CommentRepository;
 import io.mountblue.blogapp.repository.PostRepository;
+import io.mountblue.blogapp.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PostServiceImpl implements PostService{
-    private final PostRepository repository;
+    private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
+    private final TagRepository tagRepository;
+
+
     @Autowired
-    PostServiceImpl(PostRepository repo){
-        this.repository = repo;
+    PostServiceImpl(PostRepository postRepository, CommentRepository commentRepository, TagRepository tagRepository){
+        this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
+        this.tagRepository = tagRepository;
     }
     @Override
-    public void savePost(Post post) {
-        repository.save(post);
+    public void savePost(Post post, String tagString) {
+        String[] tagNames = tagString.split(",");
+
+        List<Tag> tags = new ArrayList<>();
+
+        for (String tagName : tagNames) {
+            Tag tag = tagRepository.findByName(tagName.trim())
+                    .orElseGet(() -> new Tag(tagName.trim()));
+            tags.add(tag);
+        }
+
+        post.setTags(tags);
+
+        postRepository.save(post);
     }
 
     @Override
     public void updatePost(int id) {
-        Post post = findById(id);
-        repository.save(post);
+        Post post = findPostById(id);
+        postRepository.save(post);
     }
 
     @Override
-    public Post findById(int id) {
-        return repository.findById(id).get();
+    public Post findPostById(int id) {
+        Optional<Post> postOptional = postRepository.findById(id);
+        return postOptional.orElse(null);
     }
 
     @Override
     public List<Post> getALlPosts() {
-        List<Post> posts = repository.findAll();
-        return posts;
+        return postRepository.findAll();
     }
+
+
 }

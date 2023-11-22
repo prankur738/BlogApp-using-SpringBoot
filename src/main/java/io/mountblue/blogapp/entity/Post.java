@@ -1,13 +1,16 @@
 package io.mountblue.blogapp.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="posts")
@@ -45,22 +48,14 @@ public class Post {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-//    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE,
-//            CascadeType.PERSIST, CascadeType.REFRESH}
-//    )
-//    @JoinTable(
-//            name="post_tag",
-//            joinColumns = @JoinColumn(name="post_id"),
-//            inverseJoinColumns = @JoinColumn(name="tag_id")
-//    )
-//    private List<Tag> tags;
-//
-//    @OneToMany(cascade=CascadeType.ALL)
-//    private List<Comment> comments;
+    @OneToMany(cascade=CascadeType.ALL, mappedBy = "post")
+    private List<Comment> comments;
 
-
-//    @Override
-//    public String toString() {
-//        return
-//    }
+    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(
+            name="post_tag",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<Tag> tags = new ArrayList<>();
 }

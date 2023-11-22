@@ -5,9 +5,35 @@
     <title>View</title>
 </head>
 <body>
-<p th:text="${post.title}">nbvbj</p>
+<p th:text="${post.title}"></p>
 <p th:text="${post.author}"></p>
 <p th:text="${post.excerpt}"></p>
 <p th:text="${post.content}"></p>
+<br>
+
+<div class="tag_container">
+    Tags:
+    <div class="tag_item" th:each="t : ${post.tags}" >
+        <p th:text="${t.name}" />
+    </div>
+</div>
+
+<h3>Comments</h3>
+<div class="comment_container">
+    <div class="comment_item" th:each="com : ${post.comments}" >
+        <h5 th:text="${com.comment}" ></h5>
+        <p th:text="${com.name}"></p>
+        <p th:text="${com.email}"></p>
+        <p th:text="${com.createdAt}"></p>
+    </div>
+</div>
+<form th:action="@{/saveComment/{postId}(postId=${post.id})}" th:object="${com}" method="POST">
+    Name: <input type="text" th:field="*{name}"/>
+    Email: <input type="text" th:field="*{email}"/>
+    Comment: <input type="text" th:field="*{comment}"/>
+    <input type="submit" value="Submit">
+
+</form>
+
 </body>
 </html>
