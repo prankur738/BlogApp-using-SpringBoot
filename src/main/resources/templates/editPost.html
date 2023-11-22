@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>New Post</title>
+    <title>Edit Post</title>
 </head>
 <body>
-<form th:action="@{/successPage}" th:object="${post}" method="POST">
+<!--@{/editPost/{postId}(postId=${post.id})}-->
+<form th:action="@{/updatePost/{postId}(postId=${post.id})}" th:object="${post}" method="POST">
     Title: <input type="text" th:field="*{title}"/>
     Excerpt: <input type="text" th:field="*{excerpt}"/>
     Content: <input type="text" th:field="*{content}"/>
     Author: <input type="text" th:field="*{author}"/>
-    Tags: <input type="text"  name="tagString" />
+    Tags: <input type="text"  name="tagStr" th:object="${tagString}" th:value="${tagString}" />
 
     <input type="submit" value="Submit">
 
 </form>
-
-
 </body>
 </html>

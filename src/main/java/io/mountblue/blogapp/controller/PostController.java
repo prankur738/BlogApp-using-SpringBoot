@@ -48,4 +48,27 @@ public class PostController {
         return "viewPost";
     }
 
+    @GetMapping("/editPost/{postId}")
+    public String editPost(Model model, @PathVariable("postId") int id){
+        Post post = postService.findPostById(id);
+        model.addAttribute("post",post);
+        String tagString = postService.getCommaSeperatedTags(id);
+        model.addAttribute("tagString", tagString);
+        return "editPost";
+    }
+
+    @PostMapping("/updatePost/{postId}")
+    public String updatePost(@ModelAttribute("post") Post post, @PathVariable("postId") int postId, @ModelAttribute("tagString") String tagString, @RequestParam("tagStr") String tagStr){
+        post.setId(postId);
+        System.out.println("Tags: " + tagString +" :::::::: "+tagStr);
+        postService.savePost(post, tagStr);
+        return "successPage";
+    }
+
+    @GetMapping("/deletePost/{postId}")
+    public String deletePost(@PathVariable("postId") int postId){
+        postService.deletePostById(postId);
+        return "redirect:/showAllPosts";
+    }
+
 }

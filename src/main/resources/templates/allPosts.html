@@ -29,7 +29,9 @@
                 <span style="display: inline;" th:text="${t.name}" ></span>
             </div>
         </div>
-        <a th:href="@{/viewPost/{postId}(postId=${post.id})}"> View</a>
+        <a th:href="@{/viewPost/{postId}(postId=${post.id})}"><button>View</button></a>
+        <a th:href="@{/editPost/{postId}(postId=${post.id})}"><button>Edit</button></a>
+        <a th:href="@{/deletePost/{postId}(postId=${post.id})}"><button>Delete</button></a>
     </div>
 </div>
 

@@ -42,8 +42,19 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void updatePost(int id) {
+    public void updatePost(int id, String tagString) {
         Post post = findPostById(id);
+        String[] tagNames = tagString.split(",");
+
+        List<Tag> tags = new ArrayList<>();
+
+        for (String tagName : tagNames) {
+            Tag tag = tagRepository.findByName(tagName.trim())
+                    .orElseGet(() -> new Tag(tagName.trim()));
+            tags.add(tag);
+        }
+
+        post.setTags(tags);
         postRepository.save(post);
     }
 
@@ -58,5 +69,20 @@ public class PostServiceImpl implements PostService{
         return postRepository.findAll();
     }
 
+    @Override
+    public String getCommaSeperatedTags(int id) {
+        Post post = findPostById(id);
+        String tagString = "";
 
+        for(Tag tag : post.getTags()){
+            tagString += tag.getName()+", ";
+        }
+        return tagString;
+    }
+
+    @Override
+    public void deletePostById(int id) {
+        postRepository.deleteById(id);
+    }
 }
+

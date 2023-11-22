@@ -25,6 +25,7 @@
         <p th:text="${com.name}"></p>
         <p th:text="${com.email}"></p>
         <p th:text="${com.createdAt}"></p>
+
     </div>
 </div>
 <form th:action="@{/saveComment/{postId}(postId=${post.id})}" th:object="${com}" method="POST">
