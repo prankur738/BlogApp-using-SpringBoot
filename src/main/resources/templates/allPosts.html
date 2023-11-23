@@ -17,6 +17,10 @@
     <title>Home</title>
 </head>
 <body>
+<form th:action="@{/showAllPosts/search}">
+    <input name="searchText" placeholder="search"/>
+    <input type="submit" value="Submit">
+</form>
 <div class="container">
     <div class="item" th:each="post : ${posts}" >
         <h5 th:text="${post.title}" ></h5>

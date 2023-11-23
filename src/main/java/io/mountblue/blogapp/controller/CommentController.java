@@ -3,13 +3,14 @@ package io.mountblue.blogapp.controller;
 import io.mountblue.blogapp.entity.Comment;
 import io.mountblue.blogapp.entity.Post;
 import io.mountblue.blogapp.service.CommentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class CommentController {
@@ -21,9 +22,9 @@ public class CommentController {
     }
 
     @PostMapping("/saveComment/{postId}")
-    public String saveComment(@ModelAttribute("com") Comment comment, @PathVariable("postId") int postId){
-        commentService.saveComment(comment, postId);
-        return "redirect:/viewPost/"+postId;
+    public String saveComment(@Valid @ModelAttribute("com") Comment comment, @PathVariable("postId") int postId){
+            commentService.saveComment(comment, postId);
+            return "redirect:/viewPost/"+postId;
     }
 
     @GetMapping("/editComment/{postId}/{commentId}")
@@ -36,10 +37,10 @@ public class CommentController {
     }
 
     @PostMapping("/updateComment/{postId}/{commentId}")
-    public String updateComment(@ModelAttribute("com") Comment comment, @PathVariable("postId")int postId, @PathVariable("commentId") int commentId){
-        comment.setId(commentId);
-        commentService.updateComment(comment, postId);
-        return "redirect:/viewPost/"+postId;
+    public String updateComment(@Valid @ModelAttribute("com") Comment comment, @PathVariable("postId")int postId, @PathVariable("commentId") int commentId){
+            comment.setId(commentId);
+            commentService.updateComment(comment, postId);
+            return "redirect:/viewPost/"+postId;
     }
 
     @GetMapping("/deleteComment/{postId}/{commentId}")

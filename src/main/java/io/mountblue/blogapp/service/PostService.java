@@ -12,5 +12,6 @@ public interface PostService {
     List<Post> getALlPosts();
     void deletePostById(int id);
     String getCommaSeperatedTags(int id);
+    List<Post> getPostsBySearch(String searchText);
 
 }

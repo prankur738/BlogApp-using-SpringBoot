@@ -6,10 +6,10 @@
 </head>
 <body>
 <form th:action="@{/updateComment/{postId}/{commentId}(postId=${postId},commentId=${com.id})}" th:object="${com}" method="POST">
-<!--  Name: <input type="text" th:field="*{name}"/>-->
-<!--  Email: <input type="text" th:field="*{email}"/>-->
-  Comment: <input type="text" th:field="*{comment}"/>
-  <input type="submit" value="Submit">
+
+    Comment: <input type="text" th:field="*{comment}"/>
+
+    <input type="submit" value="Submit">
 
 </form>
 

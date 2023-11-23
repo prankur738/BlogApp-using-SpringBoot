@@ -4,9 +4,13 @@ import io.mountblue.blogapp.entity.Comment;
 import io.mountblue.blogapp.entity.Post;
 import io.mountblue.blogapp.service.CommentService;
 import io.mountblue.blogapp.service.PostService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,11 +25,24 @@ public class PostController {
         this.commentService = commentService;
     }
 
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder){
+        StringTrimmerEditor trimmerEditor = new StringTrimmerEditor(true);
+        dataBinder.registerCustomEditor(String.class,trimmerEditor);
+    }
+
     @GetMapping("/showAllPosts")
     public String showAllPosts(Model model){
         List<Post> posts = postService.getALlPosts();
         model.addAttribute("posts",posts);
         return  "allPosts";
+    }
+
+    @GetMapping("/showAllPosts/search")
+    public String showSearchedPosts(Model model, @RequestParam(name="searchText") String searchText){
+        List<Post> posts = postService.getPostsBySearch(searchText);
+        model.addAttribute("posts",posts);
+        return "allPosts";
     }
 
     @GetMapping("/savePost")
@@ -34,10 +51,16 @@ public class PostController {
         return "writePost";
     }
 
-    @PostMapping("/successPage")
-    public String success(@ModelAttribute("post") Post post, @RequestParam("tagString") String tagString){
-        postService.savePost(post, tagString);
-        return "successPage";
+    @PostMapping("/successPage")//@Valid @RequestParam("tagString") String tagString,
+    public String success(@Valid @ModelAttribute("post") Post post, BindingResult bindingResult,
+                          @RequestParam(name = "tagString",required = false) String tagString){
+        if(bindingResult.hasErrors()){
+            return "writePost";
+        }
+        else{
+            postService.savePost(post, tagString);
+            return "successPage";
+        }
     }
 
     @GetMapping("/viewPost/{postId}")
@@ -58,10 +81,16 @@ public class PostController {
     }
 
     @PostMapping("/updatePost/{postId}")
-    public String updatePost(@ModelAttribute("post") Post post, @PathVariable("postId") int postId, @ModelAttribute("tagString") String tagString, @RequestParam("tagStr") String tagStr){
-        post.setId(postId);
-        postService.savePost(post, tagStr);
-        return "successPage";
+    public String updatePost(@Valid @ModelAttribute("post") Post post,BindingResult bindingResult ,@PathVariable("postId") int postId,
+                             @RequestParam(name="tagStr", required = false) String tagStr){
+        if(bindingResult.hasErrors()){
+            return "editPost";
+        }
+        else{
+            post.setId(postId);
+            postService.savePost(post, tagStr);
+            return "successPage";
+        }
     }
 
     @GetMapping("/deletePost/{postId}")

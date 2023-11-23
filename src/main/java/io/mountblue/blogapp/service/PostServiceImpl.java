@@ -26,16 +26,7 @@ public class PostServiceImpl implements PostService{
     }
     @Override
     public void savePost(Post post, String tagString) {
-        String[] tagNames = tagString.split(",");
-
-        List<Tag> tags = new ArrayList<>();
-
-        for (String tagName : tagNames) {
-            Tag tag = tagRepository.findByName(tagName.trim())
-                    .orElseGet(() -> new Tag(tagName.trim()));
-            tags.add(tag);
-        }
-
+        Set<Tag> tags = getTagsFromString(tagString);
         post.setTags(tags);
 
         postRepository.save(post);
@@ -44,15 +35,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public void updatePost(int id, String tagString) {
         Post post = findPostById(id);
-        String[] tagNames = tagString.split(",");
-
-        List<Tag> tags = new ArrayList<>();
-
-        for (String tagName : tagNames) {
-            Tag tag = tagRepository.findByName(tagName.trim())
-                    .orElseGet(() -> new Tag(tagName.trim()));
-            tags.add(tag);
-        }
+        Set<Tag> tags = getTagsFromString(tagString);
 
         post.setTags(tags);
         postRepository.save(post);
@@ -83,6 +66,36 @@ public class PostServiceImpl implements PostService{
     @Override
     public void deletePostById(int id) {
         postRepository.deleteById(id);
+    }
+
+    private Set<Tag> getTagsFromString(String tagString){
+        Set<Tag> tags = new HashSet<>();
+
+        if(tagString != null){
+
+            String[] tagNames = tagString.split(",");
+
+            for (String tagName : tagNames) {
+
+                String tag = tagName.trim();
+                Optional<Tag> tagOptional = tagRepository.findByName(tag);
+
+                if(tagOptional.isPresent()){
+                    tags.add(tagOptional.get());
+                }
+                else{
+                    Tag newTag = new Tag(tag);
+                    tagRepository.save(newTag);
+                    tags.add(newTag);
+                }
+            }
+        }
+        return tags;
+    }
+
+    @Override
+    public List<Post> getPostsBySearch(String searchText) {
+        return postRepository.getPostsBySearch(searchText);
     }
 }
 

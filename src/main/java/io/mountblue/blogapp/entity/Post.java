@@ -1,7 +1,7 @@
 package io.mountblue.blogapp.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,15 +22,19 @@ public class Post {
     @Column(name="id")
     private int id;
 
+    @NotNull(message = "Title cannot be empty")
     @Column(name="title")
     private String title;
 
+    @NotNull(message = "Excerpt cannot be empty")
     @Column(name="excerpt", length = 1000)
     private String excerpt;
 
+    @NotNull(message = "Content cannot be empty")
     @Column(name="content", columnDefinition = "text")
     private String content;
 
+    @NotNull(message = "Author name cannot be empty")
     @Column(name="author")
     private String author;
 
@@ -57,5 +62,5 @@ public class Post {
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private List<Tag> tags = new ArrayList<>();
+    private Set<Tag> tags = new HashSet<>();
 }

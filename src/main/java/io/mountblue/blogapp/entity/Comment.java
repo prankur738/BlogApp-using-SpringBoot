@@ -1,6 +1,7 @@
 package io.mountblue.blogapp.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -18,7 +19,6 @@ public class Comment {
     @Column(name = "id")
     private int id;
 
-    @Column(name="name")
     private String name;
 
     @Column(name="email")

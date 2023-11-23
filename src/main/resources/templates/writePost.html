@@ -7,9 +7,17 @@
 <body>
 <form th:action="@{/successPage}" th:object="${post}" method="POST">
     Title: <input type="text" th:field="*{title}"/>
+    <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error"></span>
+
     Excerpt: <input type="text" th:field="*{excerpt}"/>
+    <span th:if="${#fields.hasErrors('excerpt')}" th:errors="*{excerpt}" class="error"></span>
+
     Content: <input type="text" th:field="*{content}"/>
+    <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="error"></span>
+
     Author: <input type="text" th:field="*{author}"/>
+    <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}" class="error"></span>
+
     Tags: <input type="text"  name="tagString" />
 
     <input type="submit" value="Submit">

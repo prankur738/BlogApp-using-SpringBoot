@@ -1,15 +1,14 @@
 package io.mountblue.blogapp.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Getter @Setter
 @Entity
@@ -21,6 +20,7 @@ public class Tag {
     @Column(name="id")
     private int id;
 
+    @NotNull(message = "is required")
     @Column(name="name")
     private String name;
 
