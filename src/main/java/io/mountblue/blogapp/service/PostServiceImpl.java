@@ -7,6 +7,8 @@ import io.mountblue.blogapp.repository.CommentRepository;
 import io.mountblue.blogapp.repository.PostRepository;
 import io.mountblue.blogapp.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -33,12 +35,16 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void updatePost(int id, String tagString) {
-        Post post = findPostById(id);
+    public void updatePost(Post newPost, int postId, String tagString) {
+        Post oldPost = findPostById(postId);
         Set<Tag> tags = getTagsFromString(tagString);
-
-        post.setTags(tags);
-        postRepository.save(post);
+        newPost.setId(postId);
+        newPost.setTags(tags);
+        newPost.setComments(oldPost.getComments());
+        newPost.setCreatedAt(oldPost.getCreatedAt());
+        newPost.setPublishedAt(oldPost.getPublishedAt());
+        newPost.setPublished(oldPost.isPublished());
+        postRepository.save(newPost);
     }
 
     @Override
@@ -95,7 +101,18 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<Post> getPostsBySearch(String searchText) {
-        return postRepository.getPostsBySearch(searchText);
+//        return postRepository.getPostsBySearch(searchText);
+        return null;
+    }
+
+    @Override
+    public Page<Post> getPaginatedPosts(Pageable pr) {
+        return postRepository.findAll(pr);
+    }
+
+    @Override
+    public Page<Post> getPostsBySearch(Pageable pageable, String searchText) {
+        return postRepository.getPostsBySearch(searchText, pageable);
     }
 }
 

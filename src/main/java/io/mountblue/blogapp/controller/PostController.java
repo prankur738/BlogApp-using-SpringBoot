@@ -2,11 +2,13 @@ package io.mountblue.blogapp.controller;
 
 import io.mountblue.blogapp.entity.Comment;
 import io.mountblue.blogapp.entity.Post;
-import io.mountblue.blogapp.service.CommentService;
 import io.mountblue.blogapp.service.PostService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,11 +20,9 @@ import java.util.List;
 @Controller
 public class PostController {
     private final PostService postService;
-    private final CommentService commentService;
     @Autowired
-    PostController(PostService postService, CommentService commentService){
+    PostController(PostService postService){
         this.postService = postService;
-        this.commentService = commentService;
     }
 
     @InitBinder
@@ -31,17 +31,27 @@ public class PostController {
         dataBinder.registerCustomEditor(String.class,trimmerEditor);
     }
 
-    @GetMapping("/showAllPosts")
-    public String showAllPosts(Model model){
-        List<Post> posts = postService.getALlPosts();
+    @GetMapping("/showAllPosts/{pageNumber}")
+    public String showAllPosts(@PathVariable("pageNumber") int pageNumber, Model model){
+//        List<Post> posts = postService.getALlPosts();
+        //current page and items per page
+        Pageable pr = PageRequest.of(pageNumber-1, 9);
+        Page<Post> posts = postService.getPaginatedPosts(pr);
+
         model.addAttribute("posts",posts);
+        model.addAttribute("currentPage",pageNumber);
+        model.addAttribute("totalPages",posts.getTotalPages());
         return  "allPosts";
     }
 
-    @GetMapping("/showAllPosts/search")
-    public String showSearchedPosts(Model model, @RequestParam(name="searchText") String searchText){
-        List<Post> posts = postService.getPostsBySearch(searchText);
+    @GetMapping("/showAllPosts/search/{pageNumber}")
+    public String showSearchedPosts(@PathVariable("pageNumber") int pageNumber, Model model, @RequestParam(name="searchText") String searchText){
+//        List<Post> posts = postService.getPostsBySearch(searchText);
+        Pageable pr = PageRequest.of(pageNumber-1, 9);
+        Page<Post> posts = postService.getPostsBySearch(pr, searchText);
         model.addAttribute("posts",posts);
+        model.addAttribute("currentPage",pageNumber);
+        model.addAttribute("totalPages",posts.getTotalPages());
         return "allPosts";
     }
 
@@ -87,8 +97,8 @@ public class PostController {
             return "editPost";
         }
         else{
-            post.setId(postId);
-            postService.savePost(post, tagStr);
+//            post.setId(postId);
+            postService.updatePost(post, postId, tagStr);
             return "successPage";
         }
     }

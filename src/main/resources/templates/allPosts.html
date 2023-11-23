@@ -14,10 +14,12 @@
             height: auto;
         }
     </style>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
     <title>Home</title>
 </head>
 <body>
-<form th:action="@{/showAllPosts/search}">
+<form th:action="@{'/showAllPosts/search/'+${pageNumber}}">
     <input name="searchText" placeholder="search"/>
     <input type="submit" value="Submit">
 </form>
@@ -39,5 +41,16 @@
     </div>
 </div>
 
+<!--pagination-->
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li th:if="${currentPage != 1}" class="page-item"><a th:href="@{'/showAllPosts/'+${currentPage-1}}" class="page-link" >Previous</a></li>
+
+        <li th:classappend="${currentPage==pageNo?'active':''}" th:each="pageNo : ${#numbers.sequence(1,totalPages)}"
+            class="page-item"> <a th:href="@{'/showAllPosts/'+${pageNo}}" class="page-link" > <span th:text="${pageNo}"></span></a></li>
+
+        <li th:if="${currentPage != totalPages}" th:class="page-item"><a th:href="@{'/showAllPosts/'+${currentPage+1}}" class="page-link" >Next</a></li>
+    </ul>
+</nav>
 </body>
 </html>
