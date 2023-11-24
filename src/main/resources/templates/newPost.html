@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Post</title>
+    <title>New Post</title>
     <style>
         form{
             width: 800px;
@@ -19,29 +19,32 @@
     </style>
 </head>
 <body>
-<form th:action="@{/updatePost/{postId}(postId=${post.id})}" th:object="${post}" method="post">
-    <h1>Edit BlogPost</h1>
+
+<form th:action="@{/successPage}" th:object="${post}" method="POST">
+    <h1>Create new BlogPost</h1>
     <label for="title">Title</label><br>
     <input type="text" id="title" th:field="*{title}"/>
-    <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error"></span>
+    <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error"></span><br>
 
     <label for="excerpt">Excerpt</label><br>
     <textarea id="excerpt" th:field="*{excerpt}" rows="3"></textarea>
-    <span th:if="${#fields.hasErrors('excerpt')}" th:errors="*{excerpt}" class="error"></span>
+    <span th:if="${#fields.hasErrors('excerpt')}" th:errors="*{excerpt}" class="error"></span><br>
 
     <label for="content">Content</label><br>
     <textarea id="content" th:field="*{content}" rows="6"></textarea>
-    <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="error"></span>
+    <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="error"></span><br>
 
     <label for="author">Author</label><br>
     <input type="text" id="author" th:field="*{author}"/>
-    <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}" class="error"></span>
+    <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}" class="error"></span><br>
 
     <label for="tags">Tags</label><br>
-    <input id="tags" type="text"  name="tagStr" th:object="${tagString}" th:value="${tagString}" />
+    <input id="tags" type="text"  name="tagString" /><br>
 
     <input type="submit" value="Submit">
 
 </form>
+
+
 </body>
 </html>

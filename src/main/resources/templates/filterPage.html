@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Apply Filter</title>
+</head>
+<body>
+<form th:action="@{/}">
+
+    <input type="checkbox" name="author" th:each="tempAuthor : ${authors}"
+           th:value="${tempAuthor}" th:text="${tempAuthor}" />
+<br><br>
+    <input type="checkbox" name="tag" th:each="temptag : ${tags}"
+           th:value="${temptag.name}" th:text="${temptag.name}" />
+
+    <input type="submit" value="Submit" />
+
+</form>
+
+</body>
+</html>

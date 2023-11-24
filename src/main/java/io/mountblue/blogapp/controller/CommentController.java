@@ -24,7 +24,7 @@ public class CommentController {
     @PostMapping("/saveComment/{postId}")
     public String saveComment(@Valid @ModelAttribute("com") Comment comment, @PathVariable("postId") int postId){
             commentService.saveComment(comment, postId);
-            return "redirect:/viewPost/"+postId;
+            return "redirect:/viewPost?postId="+postId;
     }
 
     @GetMapping("/editComment/{postId}/{commentId}")
@@ -40,13 +40,13 @@ public class CommentController {
     public String updateComment(@Valid @ModelAttribute("com") Comment comment, @PathVariable("postId")int postId, @PathVariable("commentId") int commentId){
             comment.setId(commentId);
             commentService.updateComment(comment, postId);
-            return "redirect:/viewPost/"+postId;
+            return "redirect:/viewPost?postId="+postId;
     }
 
     @GetMapping("/deleteComment/{postId}/{commentId}")
     public String deleteComment(@PathVariable("postId") int postId, @PathVariable("commentId") int commentId){
         commentService.deleteCommentById(commentId);
-        return "redirect:/viewPost/"+postId;
+        return "redirect:/viewPost?postId="+postId;
     }
 
 }

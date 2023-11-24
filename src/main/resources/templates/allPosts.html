@@ -13,12 +13,15 @@
             border: 1px solid black;
             height: auto;
         }
+
+
     </style>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 
     <title>Home</title>
 </head>
 <body>
+<a th:href="@{/filter}"><button>Filter</button> </a>
 <form th:action="@{'/showAllPosts/search/'+${pageNumber}}">
     <input name="searchText" placeholder="search"/>
     <input type="submit" value="Submit">
@@ -35,21 +38,45 @@
                 <span style="display: inline;" th:text="${t.name}" ></span>
             </div>
         </div>
-        <a th:href="@{/viewPost/{postId}(postId=${post.id})}"><button>View</button></a>
-        <a th:href="@{/editPost/{postId}(postId=${post.id})}"><button>Edit</button></a>
-        <a th:href="@{/deletePost/{postId}(postId=${post.id})}"><button>Delete</button></a>
+
+        <div style="display: flex; gap: 10px;">
+
+        <form th:action="@{/viewPost}">
+            <input type="hidden"  name="postId" th:value="${post.id}"/>
+            <input type="submit" value="View"/>
+        </form>
+
+        <form th:action="@{/editPost}">
+            <input type="hidden"  name="postId" th:value="${post.id}"/>
+            <input type="submit" value="Edit"/>
+        </form>
+
+        <form th:action="@{/deletePost}">
+            <input type="hidden"  name="postId" th:value="${post.id}"/>
+            <input type="submit" value="Delete"/>
+        </form>
+        </div>
+
     </div>
 </div>
+
+<!--<input type="hidden" name="authors" th:value="${authors}">-->
+<!--<input type="hidden" name="tags" th:value="${tags}">-->
 
 <!--pagination-->
 <nav aria-label="Page navigation example">
     <ul class="pagination">
-        <li th:if="${currentPage != 1}" class="page-item"><a th:href="@{'/showAllPosts/'+${currentPage-1}}" class="page-link" >Previous</a></li>
+        <li th:if="${currentPage != 1}" class="page-item">
+            <a th:href="@{ '/?page = '+${currentPage-1} +'&author=' + ${authors} + '&tag=' + ${tags} }" class="page-link" >Previous</a></li>
 
-        <li th:classappend="${currentPage==pageNo?'active':''}" th:each="pageNo : ${#numbers.sequence(1,totalPages)}"
-            class="page-item"> <a th:href="@{'/showAllPosts/'+${pageNo}}" class="page-link" > <span th:text="${pageNo}"></span></a></li>
+        <li th:classappend="${currentPage==pageNo?'active':''}" th:each="pageNo : ${#numbers.sequence(1,(totalPages==0?1:totalPages))}"
+            class="page-item">
 
-        <li th:if="${currentPage != totalPages}" th:class="page-item"><a th:href="@{'/showAllPosts/'+${currentPage+1}}" class="page-link" >Next</a></li>
+        <a th:href="@{ '/?page=' + ${pageNo} +'&author=' + ${authors} + '&tag=' + ${tags} }" class="page-link" >
+            <span th:text="${pageNo}"></span></a></li>
+
+        <li th:if="${currentPage != totalPages}" th:class="page-item"><a
+                th:href="@{ '/?page=' + ${currentPage+1} +'&author=' + ${authors} + '&tag=' + ${tags} }" class="page-link" >Next</a></li>
     </ul>
 </nav>
 </body>

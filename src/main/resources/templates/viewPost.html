@@ -13,23 +13,23 @@
 
 <div class="tag_container">
     Tags:
-    <div class="tag_item" th:each="t : ${post.tags}" >
-        <p th:text="${t.name}" ></p>
+    <div class="tag_item" th:each="tempTag : ${post.tags}" >
+        <p th:text="${tempTag.name}" ></p>
     </div>
 </div>
 
 <h3>Comments</h3>
 <div class="comment_container">
-    <div class="comment_item" th:each="com : ${post.comments}" >
-        <h5 th:text="${com.comment}" ></h5>
-        <p th:text="${com.name}"></p>
-        <p th:text="${com.email}"></p>
-        <p th:text="${com.createdAt}"></p>
-        <a th:href="@{/editComment/{postId}/{commentId}(postId=${post.id},commentId=${com.id})}"><button>Edit</button></a>
-        <a th:href="@{/deleteComment/{postId}/{commentId}(postId=${post.id},commentId=${com.id})}"><button>Delete</button></a>
+    <div class="comment_item" th:each="tempComment : ${post.comments}" >
+        <h5 th:text="${tempComment.comment}" ></h5>
+        <p th:text="${tempComment.name}"></p>
+        <p th:text="${tempComment.email}"></p>
+        <p th:text="${tempComment.createdAt}"></p>
+        <a th:href="@{/editComment/{postId}/{commentId}(postId=${post.id},commentId=${tempComment.id})}"><button>Edit</button></a>
+        <a th:href="@{/deleteComment/{postId}/{commentId}(postId=${post.id},commentId=${tempComment.id})}"><button>Delete</button></a>
     </div>
 </div>
-<form th:action="@{/saveComment/{postId}(postId=${post.id})}" th:object="${com}" method="POST">
+<form th:action="@{/saveComment/{postId}(postId=${post.id})}" th:object="${newComment}" method="POST">
     Name: <input type="text" th:field="*{name}"/>
 
     Email: <input type="text" th:field="*{email}"/>

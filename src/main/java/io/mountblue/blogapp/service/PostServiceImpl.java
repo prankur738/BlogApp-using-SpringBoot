@@ -1,6 +1,5 @@
 package io.mountblue.blogapp.service;
 
-import io.mountblue.blogapp.entity.Comment;
 import io.mountblue.blogapp.entity.Post;
 import io.mountblue.blogapp.entity.Tag;
 import io.mountblue.blogapp.repository.CommentRepository;
@@ -106,13 +105,49 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Page<Post> getPaginatedPosts(Pageable pr) {
-        return postRepository.findAll(pr);
+    public Page<Post> getPaginatedPosts(Pageable pageable, List<String> authors, List<String> tags) {
+        Page<Post> posts;
+        if(authors.isEmpty()){
+            authors = null;
+        }
+        if(tags.isEmpty()){
+            tags = null;
+        }
+
+        if(authors == null && tags == null){
+            posts = postRepository.findAll(pageable);
+            System.out.println("In if condition");
+            System.out.println("Authors:"+authors);
+            System.out.println("Tags: "+tags);
+            System.out.println("Posts" + posts);
+            return posts;
+        }
+        posts = postRepository.findByAuthorInAndTags_NameIn(authors, tags, pageable);
+        System.out.println("Outside if condition");
+        System.out.println("Authors:"+authors);
+        System.out.println("Tags: "+tags);
+        System.out.println("Posts" + posts);
+
+        return posts;
+
     }
 
     @Override
     public Page<Post> getPostsBySearch(Pageable pageable, String searchText) {
         return postRepository.getPostsBySearch(searchText, pageable);
+    }
+
+    @Override
+    public Set<String> findDistinctAuthors() {
+
+        List<Post> posts = postRepository.findAll();
+        Set<String> authors = new HashSet<>();
+
+        for(Post post : posts){
+            authors.add(post.getAuthor());
+        }
+
+        return authors;
     }
 }
 
