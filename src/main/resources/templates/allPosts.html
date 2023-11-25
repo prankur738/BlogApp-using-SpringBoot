@@ -87,17 +87,20 @@
 <nav aria-label="Page navigation example">
     <ul class="pagination">
         <li th:if="${currentPage != 1}" class="page-item">
-            <a th:href="@{ '/?page = '+${currentPage-1} +'&author=' + ${authors} + '&tag=' + ${tags} +'&search=' + ${search} }"
+            <a th:href="@{ '/?page = '+${currentPage-1} +'&author=' + ${authors} + '&tag=' + ${tags} +
+            '&search=' + ${search} + '&sortField=' + ${sortField} + '&order=' + ${order} }"
                class="page-link" >Previous</a></li>
 <!--        (totalPages==0?1:totalPages)-->
         <li th:classappend="${currentPage==pageNo?'active':''}" th:each="pageNo : ${#numbers.sequence(1,(totalPages==0?1:totalPages))}"
             class="page-item">
 
-        <a th:href="@{ '/?page=' + ${pageNo} +'&author=' + ${authors} + '&tag=' + ${tags} +'&search=' + ${search} }" class="page-link" >
+        <a th:href="@{ '/?page=' + ${pageNo} +'&author=' + ${authors} + '&tag=' + ${tags} +
+        '&search=' + ${search} + '&sortField=' + ${sortField} + '&order=' + ${order} }" class="page-link" >
             <span th:text="${pageNo}"></span></a></li>
 
         <li th:if="${currentPage != totalPages}" th:class="page-item"><a
-                th:href="@{ '/?page=' + ${currentPage+1} +'&author=' + ${authors} + '&tag=' + ${tags} +'&search=' + ${search} }" class="page-link" >Next</a></li>
+                th:href="@{ '/?page=' + ${currentPage+1} +'&author=' + ${authors} + '&tag=' + ${tags} +
+                '&search=' + ${search} + '&sortField=' + ${sortField} + '&order=' + ${order} }" class="page-link" >Next</a></li>
     </ul>
 </nav>
 </body>

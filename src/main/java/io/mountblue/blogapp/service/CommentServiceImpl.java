@@ -22,30 +22,33 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public void saveComment(Comment comment, int postId) {
         Optional<Post> postOptional = postRepository.findById(postId);
+
         if(postOptional.isPresent()){
             Post post = postOptional.get();
+
             comment.setPost(post);
             commentRepository.save(comment);
         }
     }
-
     @Override
     public void deleteCommentById(int commentId) {
         commentRepository.deleteById(commentId);
     }
-
     @Override
     public Comment getCommentById(int commentId) {
         Optional<Comment> commentOptional = commentRepository.findById(commentId);
+
         return commentOptional.orElse(null);
     }
-
     @Override
     public void updateComment(Comment comment, int postId) {
         Comment commentById = getCommentById(comment.getId());
+
         comment.setName(commentById.getName());
         comment.setEmail(commentById.getEmail());
         comment.setCreatedAt(commentById.getCreatedAt());
+
         saveComment(comment,postId);
     }
+
 }
