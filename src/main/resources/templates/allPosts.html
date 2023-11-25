@@ -22,10 +22,31 @@
 </head>
 <body>
 <a th:href="@{/filter}"><button>Filter</button> </a>
-<form th:action="@{'/showAllPosts/search/'+${pageNumber}}">
-    <input name="searchText" placeholder="search"/>
+
+<form th:action="@{'/'}">
+
+    <input type="hidden" name="author" th:value="${authors}">
+    <input type="hidden" name="tag" th:value="${tags}">
+    <input type="hidden" name="search" th:value="${search}">
+
+    <select name="sortField">
+        <option  value="author">Author</option>
+        <option  value="publishedAt">Published At</option>
+    </select>
+
+    <select name="order">
+        <option  value="asc">Ascending</option>
+        <option  value="desc">Descending</option>
+    </select>
+
+    <input type="submit" value="Sort">
+
+</form>
+<form th:action="@{ '/'  }">
+    <input name="search" placeholder="search"/>
     <input type="submit" value="Submit">
 </form>
+
 <div class="container">
     <div class="item" th:each="post : ${posts}" >
         <h5 th:text="${post.title}" ></h5>
@@ -60,23 +81,23 @@
     </div>
 </div>
 
-<!--<input type="hidden" name="authors" th:value="${authors}">-->
-<!--<input type="hidden" name="tags" th:value="${tags}">-->
+
 
 <!--pagination-->
 <nav aria-label="Page navigation example">
     <ul class="pagination">
         <li th:if="${currentPage != 1}" class="page-item">
-            <a th:href="@{ '/?page = '+${currentPage-1} +'&author=' + ${authors} + '&tag=' + ${tags} }" class="page-link" >Previous</a></li>
-
+            <a th:href="@{ '/?page = '+${currentPage-1} +'&author=' + ${authors} + '&tag=' + ${tags} +'&search=' + ${search} }"
+               class="page-link" >Previous</a></li>
+<!--        (totalPages==0?1:totalPages)-->
         <li th:classappend="${currentPage==pageNo?'active':''}" th:each="pageNo : ${#numbers.sequence(1,(totalPages==0?1:totalPages))}"
             class="page-item">
 
-        <a th:href="@{ '/?page=' + ${pageNo} +'&author=' + ${authors} + '&tag=' + ${tags} }" class="page-link" >
+        <a th:href="@{ '/?page=' + ${pageNo} +'&author=' + ${authors} + '&tag=' + ${tags} +'&search=' + ${search} }" class="page-link" >
             <span th:text="${pageNo}"></span></a></li>
 
         <li th:if="${currentPage != totalPages}" th:class="page-item"><a
-                th:href="@{ '/?page=' + ${currentPage+1} +'&author=' + ${authors} + '&tag=' + ${tags} }" class="page-link" >Next</a></li>
+                th:href="@{ '/?page=' + ${currentPage+1} +'&author=' + ${authors} + '&tag=' + ${tags} +'&search=' + ${search} }" class="page-link" >Next</a></li>
     </ul>
 </nav>
 </body>

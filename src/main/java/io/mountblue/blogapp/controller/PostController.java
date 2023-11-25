@@ -57,45 +57,79 @@ public class PostController {
     }
 
     @GetMapping("/")
-    public String showAllPosts(Model model, @RequestParam(name = "page", defaultValue = "1") int pageNumber,
-    @RequestParam(name="author", required = false) List<String> authorList,
-    @RequestParam(name="tag",required = false) List<String> tagList){
+    public String showAllPosts(
+            @RequestParam(name = "page", defaultValue = "1") int pageNumber,
+            @RequestParam(name="author", required = false) List<String> authorList,
+            @RequestParam(name="tag",required = false) List<String> tagList,
+            @RequestParam(name="search", required = false) String search,
+            @RequestParam(name="sortField", defaultValue = "publishedAt") String sortField,
+            @RequestParam(name="order",defaultValue = "desc") String order,
+            Model model){
         //current page and items per page
-
+        Pageable pageable = PageRequest.of(pageNumber-1,9);
+        System.out.println(authorList);
+        System.out.println(tagList);
+        System.out.println(search);
         if (authorList == null) {
             authorList = Collections.emptyList(); // Set to an empty list or provide default values
         }
         if (tagList == null) {
             tagList = Collections.emptyList(); // Set to an empty list or provide default values
         }
-
-        Pageable pageable = PageRequest.of(pageNumber-1,9);
-        Page<Post> posts = postService.getPaginatedPosts(pageable,authorList,tagList);
-
+        search = search==null ? "" : search;
+        Page<Post> posts = postService.getPosts(authorList, tagList, search, sortField, order,model, pageable);
 
         String  authors = String.join("&author=", authorList);
         String  tags = String.join("&tag=", tagList);
-//        System.out.println(authors);
-//        System.out.println(tags);
-//        System.out.println(posts);
 
+
+
+        model.addAttribute("search", search);
         model.addAttribute("authors", authors);
         model.addAttribute("tags", tags);
         model.addAttribute("posts",posts);
-        model.addAttribute("currentPage",pageNumber);
         model.addAttribute("totalPages",posts.getTotalPages());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("order", order);
+        model.addAttribute("currentPage",pageNumber);
         return  "allPosts";
+
+//        if (authorList == null) {
+//            authorList = Collections.emptyList(); // Set to an empty list or provide default values
+//        }
+//        if (tagList == null) {
+//            tagList = Collections.emptyList(); // Set to an empty list or provide default values
+//        }
+//
+//        if(search != null){
+//            posts = postService.getPostsBySearch(search, pageable);
+//        }
+//        else{
+//            posts = postService.getPaginatedPosts(pageable,authorList,tagList);
+//            search="";
+//        }
+//        System.out.println("Total pages = "+posts.getTotalPages());
+//        System.out.println("Current Page = "+ pageNumber);
+//
+//        String  authors = String.join("&author=", authorList);
+//        String  tags = String.join("&tag=", tagList);
+//
+//        model.addAttribute("search", search);
+//        model.addAttribute("authors", authors);
+//        model.addAttribute("tags", tags);
+//        model.addAttribute("posts",posts);
+//        model.addAttribute("currentPage",pageNumber);
+//        model.addAttribute("totalPages",posts.getTotalPages());
+
+
+
+        /*
+        model.addAttribute("currentPage",pageNumber);
+
+        return  "allPosts";
+         */
     }
 
-    @GetMapping("/showAllPosts/search/{pageNumber}")
-    public String showSearchedPosts(@PathVariable("pageNumber") int pageNumber, Model model, @RequestParam(name="searchText") String searchText){
-        Pageable pr = PageRequest.of(pageNumber-1, 9);
-        Page<Post> posts = postService.getPostsBySearch(pr, searchText);
-        model.addAttribute("posts",posts);
-        model.addAttribute("currentPage",pageNumber);
-        model.addAttribute("totalPages",posts.getTotalPages());
-        return "allPosts";
-    }
     @GetMapping("/successPage")
     public String success(@Valid @ModelAttribute("post") Post post, BindingResult bindingResult,
                           @RequestParam(name = "tagString",required = false) String tagString){
@@ -136,5 +170,16 @@ public class PostController {
 
         return "filterPage";
     }
+
+    //
+//    @GetMapping("/showAllPosts/search/{pageNumber}")
+//    public String showSearchedPosts(@PathVariable("pageNumber") int pageNumber, Model model, @RequestParam(name="searchText") String searchText){
+//        Pageable pr = PageRequest.of(pageNumber-1, 9);
+//        Page<Post> posts = postService.getPostsBySearch(searchText, pr);
+//        model.addAttribute("posts",posts);
+//        model.addAttribute("currentPage",pageNumber);
+//        model.addAttribute("totalPages",posts.getTotalPages());
+//        return "allPosts";
+//    }
 
 }

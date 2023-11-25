@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.*;
 
@@ -17,14 +18,65 @@ public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final TagRepository tagRepository;
-
-
     @Autowired
     PostServiceImpl(PostRepository postRepository, CommentRepository commentRepository, TagRepository tagRepository){
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.tagRepository = tagRepository;
     }
+
+    @Override
+    public Page<Post> getPosts(List<String> authorList, List<String> tagList,
+                               String search, String sortField, String order,
+                               Model model, Pageable pageable){
+
+        Page<Post> posts = postRepository.findAll(pageable);
+
+        if(!search.isEmpty()){
+            System.out.println("In search");
+            posts = postRepository.getPostsBySearch(search, pageable);
+        }
+        else if(authorList.isEmpty() && tagList.isEmpty()){
+            System.out.println("In finding all, no filter applied");
+                if(sortField.equals("author") && order.equals("asc")){
+                    return postRepository.findAllByOrderByAuthorAsc(pageable);
+                }
+                else if(sortField.equals("author") && order.equals("desc")){
+                    return postRepository.findAllByOrderByAuthorDesc(pageable);
+                }
+                else if(sortField.equals("publishedAt") && order.equals("asc")){
+                    return postRepository.findAllByOrderByPublishedAtAsc(pageable);
+                }
+                else if(sortField.equals("publishedAt") && order.equals("desc")){
+                    return postRepository.findAllByOrderByAuthorDesc(pageable);
+                }
+            }
+        else{
+            System.out.println("In filter wali condition");
+                return postRepository.findByAuthorInAndTags_NameIn(authorList, tagList, sortField, order, pageable);
+        }
+
+//        if (authorList == null) {
+//            authorList = Collections.emptyList(); // Set to an empty list or provide default values
+//        }
+//        if (tagList == null) {
+//            tagList = Collections.emptyList(); // Set to an empty list or provide default values
+//        }
+//        String  authors = String.join("&author=", authorList);
+//        String  tags = String.join("&tag=", tagList);
+
+//        model.addAttribute("search", search);
+//        model.addAttribute("authors", authors);
+//        model.addAttribute("tags", tags);
+//        model.addAttribute("posts",posts);
+//        model.addAttribute("totalPages",posts.getTotalPages());
+//        model.addAttribute("sortField", sortField);
+//        model.addAttribute("order", order);
+
+        return  posts;
+    }
+
+
     @Override
     public void savePost(Post post, String tagString) {
         Set<Tag> tags = getTagsFromString(tagString);
@@ -97,13 +149,6 @@ public class PostServiceImpl implements PostService{
         }
         return tags;
     }
-
-    @Override
-    public List<Post> getPostsBySearch(String searchText) {
-//        return postRepository.getPostsBySearch(searchText);
-        return null;
-    }
-
     @Override
     public Page<Post> getPaginatedPosts(Pageable pageable, List<String> authors, List<String> tags) {
         Page<Post> posts;
@@ -116,24 +161,24 @@ public class PostServiceImpl implements PostService{
 
         if(authors == null && tags == null){
             posts = postRepository.findAll(pageable);
-            System.out.println("In if condition");
-            System.out.println("Authors:"+authors);
-            System.out.println("Tags: "+tags);
-            System.out.println("Posts" + posts);
+//            System.out.println("In if condition");
+//            System.out.println("Authors:"+authors);
+//            System.out.println("Tags: "+tags);
+//            System.out.println("Posts" + posts);
             return posts;
         }
-        posts = postRepository.findByAuthorInAndTags_NameIn(authors, tags, pageable);
-        System.out.println("Outside if condition");
-        System.out.println("Authors:"+authors);
-        System.out.println("Tags: "+tags);
-        System.out.println("Posts" + posts);
+        posts = null;
+//        posts = postRepository.findByAuthorInAndTags_NameIn(authors, tags,  ,pageable);
+//        System.out.println("Outside if condition");
+//        System.out.println("Authors:"+authors);
+//        System.out.println("Tags: "+tags);
+//        System.out.println("Posts" + posts);
 
         return posts;
 
     }
-
     @Override
-    public Page<Post> getPostsBySearch(Pageable pageable, String searchText) {
+    public Page<Post> getPostsBySearch(String searchText, Pageable pageable) {
         return postRepository.getPostsBySearch(searchText, pageable);
     }
 
