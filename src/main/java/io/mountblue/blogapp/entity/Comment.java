@@ -1,7 +1,6 @@
 package io.mountblue.blogapp.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -39,4 +38,5 @@ public class Comment {
     CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name="post_id")
     private Post post;
+
 }

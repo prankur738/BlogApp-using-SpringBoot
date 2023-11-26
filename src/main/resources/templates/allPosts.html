@@ -3,56 +3,177 @@
 <head>
     <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
     <style>
-        .container{
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;;
-            gap: 10px;
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            color: black;
+            padding: 10px;
+            text-align: center;
         }
 
-        .item{
+        header h1{
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        header a {
+            text-decoration: none;
+            color: black;
+            margin: 0 10px;
+        }
+
+        button {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+
+        form {
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        select, input {
+            padding: 8px;
+            margin: 0 5px;
+        }
+
+        input[type="submit"] {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+
+        input[name="search"] {
+            width: 150px; /* Adjust the width as needed */
+        }
+         .container {
+             display: flex;
+             flex-wrap: wrap;
+             gap: 20px;
+             justify-content: space-evenly;
+             margin: 20px 0;
+         }
+
+        .item {
             border: 1px solid black;
-            height: auto;
+            padding: 10px;
+            width: calc(33.33% - 20px); /* 33.33% to make 3 items in a row, subtracting 20px for the gap */
+            box-sizing: border-box;
+            margin-bottom: 20px;
         }
 
+        h5 {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        .tag_container {
+            margin-top: 10px;
+        }
+
+        .tag_item {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .page-item {
+            margin-right: 5px;
+        }
+
+        .page-link {
+            color: black;
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid black;
+            cursor: pointer;
+        }
+
+        .page-link:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .active .page-link {
+            background-color: black;
+            color: white;
+        }
 
     </style>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-
     <title>Home</title>
 </head>
 <body>
-<a th:href="@{/filter}"><button>Filter</button> </a>
 
-<form th:action="@{'/'}">
+<header>
 
-    <input type="hidden" name="author" th:value="${authors}">
-    <input type="hidden" name="tag" th:value="${tags}">
-    <input type="hidden" name="search" th:value="${search}">
+    <a th:href="@{'/'}">
+        <h1 style="color: black;">My Blog Application</h1>
+    </a>
 
-    <select name="sortField">
-        <option  value="author">Author</option>
-        <option  value="publishedAt">Published At</option>
-    </select>
+    <a th:href="@{/filterPosts}">
+        <button>Filter</button>
+    </a>
 
-    <select name="order">
-        <option  value="asc">Ascending</option>
-        <option  value="desc">Descending</option>
-    </select>
+    <a th:href="@{/newPost}">
+        <button>Create Blog</button>
+    </a>
 
-    <input type="submit" value="Sort">
+    <form th:action="@{'/'}">
 
-</form>
-<form th:action="@{ '/'  }">
-    <input name="search" placeholder="search"/>
-    <input type="submit" value="Submit">
-</form>
+        <select name="sortField">
+            <option  value="author">Author</option>
+            <option  value="publishedAt">Published At</option>
+        </select>
+
+        <select name="order">
+            <option  value="asc">Ascending</option>
+            <option  value="desc">Descending</option>
+        </select>
+
+        <input type="submit" value="Sort">
+
+    </form>
+
+    <form th:action="@{ '/'  }">
+
+        <input name="search" placeholder="search"/>
+        <input type="submit" value="Submit">
+
+    </form>
+
+</header>
 
 <div class="container">
+
     <div class="item" th:each="post : ${posts}" >
+
         <h5 th:text="${post.title}" ></h5>
-        <p th:text="${post.excerpt}"></p>
-        <p th:text="${post.author}"></p>
-        <p th:text="${post.createdAt}"></p>
+
+        <p th:text="${post.excerpt}"></p><br>
+
+        <strong>Author: </strong><span th:text="${post.author}"></span><br>
+
+        <strong>Posted:</strong> <span th:text="${post.createdAt}"></span><br>
+
         <div class="tag_container">
             Tags:
             <div class="tag_item" th:each="t : ${post.tags}" >
@@ -60,48 +181,52 @@
             </div>
         </div>
 
-        <div style="display: flex; gap: 10px;">
-
         <form th:action="@{/viewPost}">
+
             <input type="hidden"  name="postId" th:value="${post.id}"/>
             <input type="submit" value="View"/>
+
         </form>
 
         <form th:action="@{/editPost}">
+
             <input type="hidden"  name="postId" th:value="${post.id}"/>
             <input type="submit" value="Edit"/>
+
         </form>
 
-        <form th:action="@{/deletePost}">
+        <form th:action="@{/deletePost}" method="post">
+
             <input type="hidden"  name="postId" th:value="${post.id}"/>
             <input type="submit" value="Delete"/>
+
         </form>
+
         </div>
-
     </div>
-</div>
-
-
 
 <!--pagination-->
 <nav aria-label="Page navigation example">
-    <ul class="pagination">
-        <li th:if="${currentPage != 1}" class="page-item">
-            <a th:href="@{ '/?page = '+${currentPage-1} +'&author=' + ${authors} + '&tag=' + ${tags} +
-            '&search=' + ${search} + '&sortField=' + ${sortField} + '&order=' + ${order} }"
-               class="page-link" >Previous</a></li>
-<!--        (totalPages==0?1:totalPages)-->
-        <li th:classappend="${currentPage==pageNo?'active':''}" th:each="pageNo : ${#numbers.sequence(1,(totalPages==0?1:totalPages))}"
-            class="page-item">
 
+    <ul class="pagination">
+
+        <li th:if="${currentPage != 1}" class="page-item">
+            <a th:href="@{ '/?page = '+${'currentPage-1'} +'&author=' + ${authors} + '&tag=' + ${tags} + '&search=' +
+             ${search} + '&sortField=' + ${sortField} + '&order=' + ${order} }" class="page-link" >Previous</a></li>
+
+        <li th:classappend="${currentPage==pageNo?'active':''}" th:each="pageNo :
+        ${#numbers.sequence(1,(totalPages==0?1:totalPages))}" class="page-item">
         <a th:href="@{ '/?page=' + ${pageNo} +'&author=' + ${authors} + '&tag=' + ${tags} +
         '&search=' + ${search} + '&sortField=' + ${sortField} + '&order=' + ${order} }" class="page-link" >
             <span th:text="${pageNo}"></span></a></li>
 
-        <li th:if="${currentPage != totalPages}" th:class="page-item"><a
-                th:href="@{ '/?page=' + ${currentPage+1} +'&author=' + ${authors} + '&tag=' + ${tags} +
-                '&search=' + ${search} + '&sortField=' + ${sortField} + '&order=' + ${order} }" class="page-link" >Next</a></li>
+        <li th:if="${currentPage != totalPages}" th:class="page-item">
+            <a th:href="@{ '/?page=' + ${currentPage+1} +'&author=' + ${authors} + '&tag=' + ${tags} +'&search=' +
+            ${search} + '&sortField=' + ${sortField} + '&order=' + ${order} }" class="page-link" >Next</a></li>
+
     </ul>
+
 </nav>
+
 </body>
 </html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Apply Filter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        .filter{
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+
+        }
+
+        button {
+            background-color: black;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h1><a th:href="@{/}">My Blog Application</a></h1>
+
+<form th:action="@{/}" >
+    <!-- Filters by tags -->
+    <div class="filter">
+    <div>
+        <h2><strong>Tags</strong></h2>
+        <div th:each="obj : ${tags}">
+            <input type="checkbox" name="tag" th:value="${obj.name}" th:id="${'tag' + obj.name}" />
+            <label th:for="${'tag' + obj.name}" th:text="${obj.name}"></label><br/>
+        </div>
+    </div>
+
+    <!-- Filters by author -->
+    <div>
+        <h2><strong>Author</strong></h2>
+        <div th:each="author : ${authors}">
+            <input type="checkbox" name="author" th:value="${author}" th:id="${'author' + author}" />
+            <label th:for="${'author' + author}" th:text="${author}"></label><br/>
+        </div>
+    </div>
+    </div>
+    <button type="submit">Filter</button>
+</form>
+
+</body>
+</html>

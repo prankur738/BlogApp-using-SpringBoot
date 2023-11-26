@@ -30,16 +30,19 @@ public class PostController {
         this.postService = postService;
         this.tagService = tagService;
     }
+
     @InitBinder
     public void initBinder(WebDataBinder dataBinder){
         StringTrimmerEditor trimmerEditor = new StringTrimmerEditor(true);
         dataBinder.registerCustomEditor(String.class,trimmerEditor);
     }
+
     @GetMapping("/newPost")
     public String newPost(Model model){
         model.addAttribute("post",new Post());
         return "newPost";
     }
+
     @GetMapping ("/editPost")
     public String editPost(Model model, @RequestParam("postId") int postId){
         Post post = postService.findPostById(postId);
@@ -48,6 +51,7 @@ public class PostController {
         model.addAttribute("tagString", tagString);
         return "editPost";
     }
+
     @GetMapping("/viewPost")
     public String viewPost(Model model, @RequestParam("postId") int postId){
         Post post = postService.findPostById(postId);
@@ -66,7 +70,7 @@ public class PostController {
             @RequestParam(name="order",defaultValue = "desc") String order,
             Model model){
 
-        Pageable pageable = PageRequest.of(pageNumber-1,9);
+        Pageable pageable = PageRequest.of(pageNumber-1,6);
 
         if (authorList == null) {
             authorList = Collections.emptyList(); // Set to an empty list or provide default values
@@ -93,8 +97,8 @@ public class PostController {
         return  "allPosts";
     }
 
-    @GetMapping("/successPage")
-    public String success(@Valid @ModelAttribute("post") Post post,
+    @PostMapping("/savePost")
+    public String savePost(@Valid @ModelAttribute("post") Post post,
                           BindingResult bindingResult,
                           @RequestParam(name = "tagString",required = false) String tagString){
 
@@ -106,6 +110,7 @@ public class PostController {
             return "redirect:/";
         }
     }
+
     @PostMapping("/updatePost/{postId}")
     public String updatePost(@Valid @ModelAttribute("post") Post post,
                              BindingResult bindingResult ,
@@ -119,14 +124,16 @@ public class PostController {
             postService.updatePost(post, postId, tagStr);
             return "redirect:/viewPost?postId="+postId;
         }
+
     }
 
-    @GetMapping("/deletePost")
+    @PostMapping("/deletePost")
     public String deletePost(@RequestParam("postId") int postId){
         postService.deletePostById(postId);
         return "redirect:/";
     }
-    @GetMapping("/filter")
+
+    @GetMapping("/filterPosts")
     public String filterPosts(Model model){
         Set<String> authors = postService.findDistinctAuthors();
         List<Tag> tags = tagService.getAllTags();
@@ -134,6 +141,7 @@ public class PostController {
         model.addAttribute("authors",authors);
         model.addAttribute("tags",tags);
 
-        return "filterPage";
+        return "filterPosts";
     }
+
 }

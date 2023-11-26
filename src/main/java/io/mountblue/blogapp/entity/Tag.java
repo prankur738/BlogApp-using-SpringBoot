@@ -35,10 +35,11 @@ public class Tag {
     @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH},
     mappedBy = "tags")
     private List<Post> posts = new ArrayList<>();
+
     public Tag(){}
+
     public Tag(String name){
         this.name = name;
     }
-
 
 }

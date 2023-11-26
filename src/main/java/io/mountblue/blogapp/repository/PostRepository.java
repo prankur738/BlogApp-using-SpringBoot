@@ -14,6 +14,7 @@ public interface PostRepository extends JpaRepository<Post,Integer> {
     Page<Post> findAllByOrderByPublishedAtDesc(Pageable pageable);
     Page<Post> findAllByOrderByAuthorAsc(Pageable pageable);
     Page<Post> findAllByOrderByAuthorDesc(Pageable pageable);
+
     @Query("SELECT DISTINCT p FROM Post p LEFT JOIN FETCH p.tags t WHERE "+
             "t.name LIKE CONCAT('%', :query, '%') OR "+
             "p.title LIKE CONCAT('%', :query, '%') OR "+
@@ -22,6 +23,7 @@ public interface PostRepository extends JpaRepository<Post,Integer> {
             "p.excerpt LIKE CONCAT('%', :query, '%')"
     )
     Page<Post> getPostsBySearch(@Param("query") String query, Pageable pageable);
+
     @Query("SELECT p from Post p LEFT JOIN p.tags t ON "+
             "COALESCE(t.name, '') IN :tags "+
             "WHERE (:authors IS NULL OR p.author IN :authors) AND "+

@@ -17,6 +17,7 @@ import java.util.Set;
 @Table(name="posts")
 @Getter @Setter
 public class Post {
+
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="id")
@@ -63,4 +64,5 @@ public class Post {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private Set<Tag> tags = new HashSet<>();
+
 }

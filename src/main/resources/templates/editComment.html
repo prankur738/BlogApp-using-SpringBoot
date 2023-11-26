@@ -3,11 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit Comment</title>
+    <style>
+        body, h1, h2, h3, p, div, span, input, button {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+        }
+
+        header a {
+            text-decoration: none;
+        }
+
+        .post_container {
+            /*margin: 20px auto;*/
+            /*margin-top: 10px;*/
+            margin: auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+        }
+
+        #title {
+            font-size: 35px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .post_container h4{
+            display: inline;
+            margin-top: 5px;
+        }
+
+        #post_content h3{
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+
+        #post_content {
+            margin-bottom: 20px;
+        }
+
+        .tag_container {
+            margin-bottom: 20px;
+        }
+
+        .tag_item {
+            display: inline-block;
+            margin-right: 10px;
+            background-color: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        form textarea{
+            width: 300px;
+        }
+    </style>
 </head>
 <body>
-<form th:action="@{/updateComment/{postId}/{commentId}(postId=${postId},commentId=${com.id})}" th:object="${com}" method="POST">
 
-    Comment: <input type="text" th:field="*{comment}"/>
+<header>
+    <a th:href="@{'/'}">
+        <h1 style="color: black;">My Blog Application</h1>
+    </a>
+</header>
+
+<div class="post_container">
+
+    <div id="title"><p th:text="${post.title}"></p></div>
+    <div id="author"><h4>Author:</h4> <span  th:text="${post.author}"></span></div>
+    <div id="post_date"> <h4>Posted: </h4><span  th:text="${post.createdAt}"></span></div>
+    <div id="update_date"> <h4>Last Updated: </h4> <span  th:text="${post.updatedAt}"></span></div>
+    <div id="post_content">
+        <h3>Content: </h3> <span  th:text="${post.content}"></span>
+    </div>
+    <div class="tag_container">
+        Tags:
+        <div class="tag_item" th:each="tempTag : ${post.tags}" >
+            <p th:text="${tempTag.name}" ></p>
+        </div>
+    </div>
+
+</div>
+
+<h2>Update Comment</h2>
+
+<form th:action="@{/updateComment/{postId}/{commentId}(postId=${postId},commentId=${com.id})}"
+      th:object="${com}" method="POST">
+
+    Name: <span th:text="${com.name}"></span><br>
+    Email: <span th:text="${com.email}"></span><br>
+    <label for="updatedComment">Comment: </label><br>
+     <textarea id="updatedComment" rows="4" th:field="${com.comment}"></textarea><br>
 
     <input type="submit" value="Submit">
 

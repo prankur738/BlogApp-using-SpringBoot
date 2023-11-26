@@ -2,39 +2,143 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>View</title>
-</head>
-<body>
-<p th:text="${post.title}"></p>
-<p th:text="${post.author}"></p>
-<p th:text="${post.excerpt}"></p>
-<p th:text="${post.content}"></p>
-<br>
+    <title>View Post</title>
 
-<div class="tag_container">
-    Tags:
-    <div class="tag_item" th:each="tempTag : ${post.tags}" >
-        <p th:text="${tempTag.name}" ></p>
+    <style>
+        body, h1, h2, h3, p, div, span, input, button {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+        }
+
+        header a {
+            text-decoration: none;
+        }
+
+        .post_container {
+            /*margin: 20px auto;*/
+            /*margin-top: 10px;*/
+            margin: auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+        }
+
+        #title {
+            font-size: 35px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .post_container h4{
+            display: inline;
+            margin-top: 5px;
+        }
+
+        #post_content h3{
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+
+        #post_content {
+            margin-bottom: 20px;
+        }
+
+        .tag_container {
+            margin-bottom: 20px;
+        }
+
+        .tag_item {
+            display: inline-block;
+            margin-right: 10px;
+            background-color: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .comment_container {
+            margin-bottom: 20px;
+        }
+
+        .comment_item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+        }
+
+        .comment_item button {
+            margin-right: 5px;
+        }
+
+        form{
+            width: 300px;
+        }
+
+        form label,input,textarea{
+            width: 100%;
+            margin: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<header>
+    <a th:href="@{'/'}">
+        <h1 style="color: black;">My Blog Application</h1>
+    </a>
+</header>
+
+<div class="post_container">
+
+    <div id="title"><p th:text="${post.title}"></p></div>
+    <div id="author"><h4>Author:</h4> <span  th:text="${post.author}"></span></div>
+    <div id="post_date"> <h4>Posted: </h4><span  th:text="${post.createdAt}"></span></div>
+    <div id="update_date"> <h4>Last Updated: </h4> <span  th:text="${post.updatedAt}"></span></div>
+    <div id="post_content">
+        <h3>Content: </h3> <span  th:text="${post.content}"></span>
     </div>
+    <div class="tag_container">
+        Tags:
+        <div class="tag_item" th:each="tempTag : ${post.tags}" >
+            <p th:text="${tempTag.name}" ></p>
+        </div>
+    </div>
+
 </div>
 
-<h3>Comments</h3>
+<h2>Comments</h2>
 <div class="comment_container">
     <div class="comment_item" th:each="tempComment : ${post.comments}" >
-        <h5 th:text="${tempComment.comment}" ></h5>
+        <h4 th:text="${tempComment.comment}" ></h4>
         <p th:text="${tempComment.name}"></p>
         <p th:text="${tempComment.email}"></p>
         <p th:text="${tempComment.createdAt}"></p>
-        <a th:href="@{/editComment/{postId}/{commentId}(postId=${post.id},commentId=${tempComment.id})}"><button>Edit</button></a>
-        <a th:href="@{/deleteComment/{postId}/{commentId}(postId=${post.id},commentId=${tempComment.id})}"><button>Delete</button></a>
+        <a th:href="@{/editComment/{postId}/{commentId}(postId=${post.id},commentId=${tempComment.id})}">
+            <button>Edit</button></a>
+        <a th:href="@{/deleteComment/{postId}/{commentId}(postId=${post.id},commentId=${tempComment.id})}">
+            <button>Delete</button></a>
     </div>
 </div>
+
+<h4>Add new Comment</h4>
 <form th:action="@{/saveComment/{postId}(postId=${post.id})}" th:object="${newComment}" method="POST">
-    Name: <input type="text" th:field="*{name}"/>
 
-    Email: <input type="text" th:field="*{email}"/>
+    <label for="name">Name: </label>
+    <input id="name" type="text" th:field="*{name}"/>
 
-    Comment: <input type="text" th:field="*{comment}"/>
+    <label for="email">Email: </label>
+    <input id="email" type="text" th:field="*{email}"/>
+
+    <label for="commentText">Comment: </label>
+    <textarea id="commentText" rows="4" th:field="*{comment}"></textarea>
 
     <input type="submit" value="Submit">
 

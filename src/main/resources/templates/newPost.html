@@ -20,7 +20,7 @@
 </head>
 <body>
 
-<form th:action="@{/successPage}" th:object="${post}" method="POST">
+<form th:action="@{/savePost}" th:object="${post}" method="POST">
     <h1>Create new BlogPost</h1>
     <label for="title">Title</label><br>
     <input type="text" id="title" th:field="*{title}"/>
