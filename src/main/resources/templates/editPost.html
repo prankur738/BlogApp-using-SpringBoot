@@ -34,8 +34,15 @@
     <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="error"></span>
 
     <label for="author">Author</label><br>
-    <input type="text" id="author" th:field="*{author}"/>
-    <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}" class="error"></span>
+    <div th:if = "${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+        <input type="text" id="author" th:field="*{author}"/>
+    </div>
+    <div th:unless="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+        <span th:text = "${#authentication.principal.username}" ></span>
+        <input type="hidden"  th:field="*{author}"/>
+    </div>
+    <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}" class="error"></span><br>
+
 
     <label for="tags">Tags</label><br>
     <input id="tags" type="text"  name="tagStr" th:object="${tagString}" th:value="${tagString}" />

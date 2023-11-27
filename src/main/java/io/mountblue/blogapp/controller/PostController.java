@@ -11,6 +11,8 @@ import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,9 +40,25 @@ public class PostController {
     }
 
     @GetMapping("/newPost")
-    public String newPost(Model model){
-        model.addAttribute("post",new Post());
+    public String newPost(Model model, @AuthenticationPrincipal UserDetails userDetails){
+        Post post = new Post();
+        post.setAuthor(userDetails.getUsername());
+        model.addAttribute("post",post);
         return "newPost";
+    }
+
+    @PostMapping("/savePost")
+    public String savePost(@Valid @ModelAttribute("post") Post post,
+                           BindingResult bindingResult,
+                           @RequestParam(name = "tagString",required = false) String tagString){
+
+        if(bindingResult.hasErrors()){
+            return "newPost";
+        }
+        else{
+            postService.savePost(post, tagString);
+            return "redirect:/";
+        }
     }
 
     @GetMapping ("/editPost")
@@ -97,19 +115,7 @@ public class PostController {
         return  "allPosts";
     }
 
-    @PostMapping("/savePost")
-    public String savePost(@Valid @ModelAttribute("post") Post post,
-                          BindingResult bindingResult,
-                          @RequestParam(name = "tagString",required = false) String tagString){
 
-        if(bindingResult.hasErrors()){
-            return "newPost";
-        }
-        else{
-            postService.savePost(post, tagString);
-            return "redirect:/";
-        }
-    }
 
     @PostMapping("/updatePost/{postId}")
     public String updatePost(@Valid @ModelAttribute("post") Post post,

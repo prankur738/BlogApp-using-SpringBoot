@@ -25,6 +25,16 @@
             margin: 0 10px;
         }
 
+        #navbar-top{
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        #navbar-top h1{
+            margin-left: 400px;
+        }
+
         button {
             background-color: black;
             color: white;
@@ -124,19 +134,30 @@
 <body>
 
 <header>
+<div id="navbar-top">
 
     <a th:href="@{'/'}">
         <h1 style="color: black;">My Blog Application</h1>
     </a>
 
+    <div th:if = "${#authorization.expression('hasRole(''ROLE_ADMIN'')') ||
+    #authorization.expression('hasRole(''ROLE_AUTHOR'')')}">
+    <form th:action="@{/logout}" method="POST">
+        <input type="submit" value="Logout">
+    </form>
+    </div>
+</div>
+
     <a th:href="@{/filterPosts}">
         <button>Filter</button>
     </a>
-
+    <span th:if="${#authorization.expression('isAuthenticated()')}">
+<!--    <span th:if = "${#authorization.expression('hasRole(''ROLE_ADMIN'')') ||-->
+<!--    #authorization.expression('hasRole(''ROLE_AUTHOR'')')}">-->
     <a th:href="@{/newPost}">
         <button>Create Blog</button>
     </a>
-
+    </span>
     <form th:action="@{'/'}">
 
         <select name="sortField">
@@ -159,6 +180,8 @@
         <input type="submit" value="Submit">
 
     </form>
+
+
 
 </header>
 
@@ -187,20 +210,22 @@
             <input type="submit" value="View"/>
 
         </form>
+        <span th:if="${#authorization.expression('isAuthenticated()')}">
+        <div th:if = "${#authorization.expression('hasRole(''ROLE_ADMIN'')') ||
+        #authentication.principal.username == post.author}">
 
         <form th:action="@{/editPost}">
-
             <input type="hidden"  name="postId" th:value="${post.id}"/>
             <input type="submit" value="Edit"/>
-
         </form>
 
         <form th:action="@{/deletePost}" method="post">
-
             <input type="hidden"  name="postId" th:value="${post.id}"/>
             <input type="submit" value="Delete"/>
-
         </form>
+
+        </div>
+        </span>
 
         </div>
     </div>

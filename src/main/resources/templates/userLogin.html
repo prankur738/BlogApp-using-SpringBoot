@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        header a{
+            text-decoration: none;
+            color: black;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .login-form {
+            padding: 40px 0;
+            margin: 0 10px;
+        }
+
+        .form-container {
+            max-width: 40%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .contact-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-container label, div {
+            display: block;
+            font-weight: bold;
+        }
+        .form-container div{
+            font-style: italic;
+            margin-bottom: 10px;
+            color: red;
+        }
+
+        .form-container input {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 1rem;
+            resize: vertical;
+        }
+
+        .submit-button{
+            padding: 10px 20px;
+            background-color: black;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <a th:href="@{/}">
+        <h1>My Blog Application</h1>
+    </a>
+</header>
+<section class="login-form">
+    <div class="form-container">
+        <h2>Your Details</h2>
+        <form th:action="@{/authenticateUser}" method="POST">
+
+            <div th:if="${param.error}">
+                Sorry! You entered invalid username/password
+            </div>
+
+            <div th:if="${param.logout}">
+                You are logged out! Login again
+            </div>
+
+            <label for="email">Usernme</label>
+            <input type="text" id="email" name="username" required />
+
+            <label for="password">Password</label>
+            <input id="password"  name="password" required />
+
+            <input class="submit-button" type="submit" value="Login" />
+
+        </form>
+        <a th:href="@{/register}">
+            <button class="submit-button">Register New User</button>
+        </a>
+    </div>
+</section>
+</body>
+</html>

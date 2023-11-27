@@ -65,4 +65,7 @@ public class Post {
     )
     private Set<Tag> tags = new HashSet<>();
 
+    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    private User user;
+
 }

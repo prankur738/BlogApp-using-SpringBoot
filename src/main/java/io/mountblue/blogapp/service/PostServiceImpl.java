@@ -2,8 +2,10 @@ package io.mountblue.blogapp.service;
 
 import io.mountblue.blogapp.entity.Post;
 import io.mountblue.blogapp.entity.Tag;
+import io.mountblue.blogapp.entity.User;
 import io.mountblue.blogapp.repository.PostRepository;
 import io.mountblue.blogapp.repository.TagRepository;
+import io.mountblue.blogapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,10 +16,12 @@ import java.util.*;
 public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
     private final TagRepository tagRepository;
+    private final UserRepository userRepository;
     @Autowired
-    PostServiceImpl(PostRepository postRepository, TagRepository tagRepository){
+    PostServiceImpl(PostRepository postRepository, TagRepository tagRepository, UserRepository userRepository){
         this.postRepository = postRepository;
         this.tagRepository = tagRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -58,6 +62,8 @@ public class PostServiceImpl implements PostService{
     public void savePost(Post post, String tagString) {
         Set<Tag> tags = getTagsFromString(tagString);
         post.setTags(tags);
+        User user = userRepository.findByUsername(post.getAuthor());
+        post.setUser(user);
 
         postRepository.save(post);
     }

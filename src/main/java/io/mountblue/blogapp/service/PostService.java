@@ -1,10 +1,8 @@
 package io.mountblue.blogapp.service;
 
-import io.mountblue.blogapp.entity.Comment;
 import io.mountblue.blogapp.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.Set;
