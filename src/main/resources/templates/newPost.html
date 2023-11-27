@@ -41,10 +41,10 @@
     <div th:if = "${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
         <input type="text" id="author" th:field="*{author}"/>
     </div>
-        <div th:unless="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+    <div th:unless="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
             <span th:text = "${#authentication.principal.username}" ></span>
             <input type="hidden"  th:field="*{author}"/>
-        </div>
+    </div>
     <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}" class="error"></span><br>
 
     <label for="tags">Tags</label><br>

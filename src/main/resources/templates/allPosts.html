@@ -140,12 +140,18 @@
         <h1 style="color: black;">My Blog Application</h1>
     </a>
 
-    <div th:if = "${#authorization.expression('hasRole(''ROLE_ADMIN'')') ||
-    #authorization.expression('hasRole(''ROLE_AUTHOR'')')}">
+    <span th:if="${#authorization.expression('isAuthenticated()')}">
     <form th:action="@{/logout}" method="POST">
         <input type="submit" value="Logout">
     </form>
-    </div>
+    </span>
+
+    <span th:unless="${#authorization.expression('isAuthenticated()')}">
+        <form th:action="@{/loginPage}" method="GET">
+            <input type="submit" value="Login">
+        </form>
+    </span>
+
 </div>
 
     <a th:href="@{/filterPosts}">
