@@ -41,6 +41,9 @@ public class PostController {
 
     @GetMapping("/newPost")
     public String newPost(Model model, @AuthenticationPrincipal UserDetails userDetails){
+        if(userDetails == null){
+            return "accessDenied";
+        }
         Post post = new Post();
         post.setAuthor(userDetails.getUsername());
         model.addAttribute("post",post);
@@ -63,6 +66,7 @@ public class PostController {
 
     @GetMapping ("/editPost")
     public String editPost(Model model, @RequestParam("postId") int postId){
+
         Post post = postService.findPostById(postId);
         model.addAttribute("post",post);
         String tagString = postService.getCommaSeperatedTags(postId);

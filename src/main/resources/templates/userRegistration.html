@@ -41,7 +41,7 @@
       display: block;
       font-weight: bold;
     }
-    .form-container div{
+    .form-container .error{
       font-style: italic;
       margin-bottom: 10px;
       color: red;
@@ -78,11 +78,15 @@
     <h2>Your Details</h2>
     <form th:action="@{/processNewUser}" th:object="${user}" method="POST">
 
-      <label for="name">Name</label>
+      <div class="error" th:if="${error}">
+        Username already exists
+      </div>
+
+      <label for="name">Username</label>
       <input type="text" id="name" name="username" th:field="*{username}" required />
 
       <label for="password">Password</label>
-      <input id="password"  name="password" th:field="*{password}" required />
+      <input id="password"  type="password" name="password" th:field="*{password}" required />
 
       <input class="submit-button" type="submit" value="Register" />
 

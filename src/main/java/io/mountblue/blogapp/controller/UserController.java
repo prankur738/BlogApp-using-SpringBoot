@@ -30,9 +30,20 @@ public class UserController {
     }
 
     @PostMapping("/processNewUser")
-    public String processNewUser(@ModelAttribute("user") User user){
-        userService.saveUser(user);
+    public String processNewUser(@ModelAttribute("user") User user, Model model){
 
+        String username = user.getUsername();
+        if(userService.isUserExists(username)){
+            model.addAttribute("error", "Username already exists");
+            return "userRegistration";
+        }
+
+        userService.saveUser(user);
         return "redirect:/loginPage";
+    }
+
+    @GetMapping("/access-denied")
+    public String showAccessDenied(){
+        return "accessDenied";
     }
 }

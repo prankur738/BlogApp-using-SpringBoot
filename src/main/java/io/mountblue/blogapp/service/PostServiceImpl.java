@@ -62,8 +62,11 @@ public class PostServiceImpl implements PostService{
     public void savePost(Post post, String tagString) {
         Set<Tag> tags = getTagsFromString(tagString);
         post.setTags(tags);
-        User user = userRepository.findByUsername(post.getAuthor());
-        post.setUser(user);
+        Optional<User> optionalUser = userRepository.findByUsername(post.getAuthor());
+
+        if(optionalUser.isPresent()){
+            post.setUser(optionalUser.get());
+        }
 
         postRepository.save(post);
     }
@@ -79,6 +82,7 @@ public class PostServiceImpl implements PostService{
         newPost.setCreatedAt(oldPost.getCreatedAt());
         newPost.setPublishedAt(oldPost.getPublishedAt());
         newPost.setPublished(oldPost.isPublished());
+        newPost.setUser(oldPost.getUser());
 
         postRepository.save(newPost);
     }

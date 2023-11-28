@@ -20,8 +20,6 @@
         }
 
         .post_container {
-            /*margin: 20px auto;*/
-            /*margin-top: 10px;*/
             margin: auto;
             padding: 10px;
             border: 1px solid #ccc;
@@ -121,12 +119,22 @@
         <p th:text="${tempComment.name}"></p>
         <p th:text="${tempComment.email}"></p>
         <p th:text="${tempComment.createdAt}"></p>
+
+        <span th:if="${#authorization.expression('isAuthenticated()')}">
+        <span th:if = "${#authentication.principal.username == post.author ||
+                #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
         <a th:href="@{/editComment/{postId}/{commentId}(postId=${post.id},commentId=${tempComment.id})}">
             <button>Edit</button></a>
         <a th:href="@{/deleteComment/{postId}/{commentId}(postId=${post.id},commentId=${tempComment.id})}">
             <button>Delete</button></a>
+        </span>
+        </span>
+
     </div>
 </div>
+
+<!--    <span th:if = "${#authorization.expression('hasRole(''ROLE_ADMIN'')') ||-->
+<!--    #authorization.expression('hasRole(''ROLE_AUTHOR'')')}">-->
 
 <h4>Add new Comment</h4>
 <form th:action="@{/saveComment/{postId}(postId=${post.id})}" th:object="${newComment}" method="POST">

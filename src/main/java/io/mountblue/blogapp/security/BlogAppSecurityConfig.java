@@ -34,10 +34,14 @@ public class BlogAppSecurityConfig {
 
         httpSecurity.authorizeHttpRequests(configurer ->
                 configurer
-                        .requestMatchers("/register","/processNewUser","/**").permitAll()
+                        .requestMatchers("/register","/processNewUser","/","/filterPosts","/viewPost").permitAll()
+                        .requestMatchers("/**").hasAnyRole("AUTHOR","ADMIN")
                         .anyRequest().authenticated()
-
         )
+                .exceptionHandling(configurer ->
+                        configurer
+                                .accessDeniedPage("/access-denied")
+                )
                 .formLogin(form ->
                         form
                                 .loginPage("/loginPage")
