@@ -31,10 +31,6 @@
             margin-bottom: 20px;
         }
 
-        #navbar-top h1{
-            margin-left: 400px;
-        }
-
         button {
             background-color: black;
             color: white;
@@ -135,6 +131,10 @@
 
 <header>
 <div id="navbar-top">
+
+    <span th:if="${#authorization.expression('isAuthenticated()')}">
+        <h1><span th:text = "${#authentication.principal.username}" ></span></h1>
+    </span>
 
     <a th:href="@{'/'}">
         <h1 style="color: black;">My Blog Application</h1>

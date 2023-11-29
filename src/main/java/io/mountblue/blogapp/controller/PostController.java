@@ -65,13 +65,21 @@ public class PostController {
     }
 
     @GetMapping ("/editPost")
-    public String editPost(Model model, @RequestParam("postId") int postId){
-
+    public String editPost(Model model, @RequestParam("postId") int postId,
+                           @AuthenticationPrincipal UserDetails userDetails){
         Post post = postService.findPostById(postId);
-        model.addAttribute("post",post);
-        String tagString = postService.getCommaSeperatedTags(postId);
-        model.addAttribute("tagString", tagString);
-        return "editPost";
+
+        boolean isAuthorized = postService.isUserAuthorized(userDetails, postId);
+
+        if(isAuthorized){
+            model.addAttribute("post",post);
+            String tagString = postService.getCommaSeperatedTags(postId);
+            model.addAttribute("tagString", tagString);
+            return "editPost";
+        }
+
+        return "accessDenied";
+
     }
 
     @GetMapping("/viewPost")
@@ -138,9 +146,20 @@ public class PostController {
     }
 
     @PostMapping("/deletePost")
-    public String deletePost(@RequestParam("postId") int postId){
-        postService.deletePostById(postId);
-        return "redirect:/";
+    public String deletePost(@AuthenticationPrincipal UserDetails userDetails,
+                             @RequestParam("postId") int postId){
+        Post post = postService.findPostById(postId);
+
+        boolean isAuthorized = postService.isUserAuthorized(userDetails, postId);
+
+        if(isAuthorized){
+            postService.deletePostById(postId);
+            return "redirect:/";
+        }
+
+        return "accessDenied";
+
+
     }
 
     @GetMapping("/filterPosts")

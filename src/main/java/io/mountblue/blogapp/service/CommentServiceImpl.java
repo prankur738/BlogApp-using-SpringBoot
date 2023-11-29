@@ -7,6 +7,7 @@ import io.mountblue.blogapp.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,6 +50,18 @@ public class CommentServiceImpl implements CommentService{
         comment.setCreatedAt(commentById.getCreatedAt());
 
         saveComment(comment,postId);
+    }
+
+    @Override
+    public List<Comment> findAll() {
+        return commentRepository.findAll();
+    }
+
+    @Override
+    public Comment findById(int commentId) {
+        Optional<Comment> commentOptional = commentRepository.findById(commentId);
+
+        return commentOptional.orElse(null);
     }
 
 }

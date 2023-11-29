@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <style>
-
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
@@ -64,7 +63,6 @@
             font-size: 1rem;
             cursor: pointer;
         }
-
     </style>
 </head>
 <body>
@@ -83,7 +81,7 @@
                 Sorry! You entered invalid username/password
             </div>
 
-            <div th:if="${param.logout}">
+            <div class="error" th:if="${param.logout}">
                 You are logged out! Login again
             </div>
 

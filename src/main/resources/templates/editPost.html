@@ -33,14 +33,10 @@
     <textarea id="content" th:field="*{content}" rows="6"></textarea>
     <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="error"></span>
 
-    <label for="author">Author</label><br>
+    <label>Author</label><br>
 
-    <div th:if = "${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-        <input type="text" id="author" th:field="*{author}"/>
-    </div>
-
-    <div th:unless="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-        <span th:text = "${#authentication.principal.username}" ></span>
+    <div>
+        <span th:text = "*{author}" ></span>
         <input type="hidden"  th:field="*{author}"/>
     </div>
 

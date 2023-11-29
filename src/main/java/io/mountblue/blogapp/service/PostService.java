@@ -3,6 +3,7 @@ package io.mountblue.blogapp.service;
 import io.mountblue.blogapp.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 import java.util.Set;
@@ -17,5 +18,9 @@ public interface PostService {
     Page<Post> getPosts(List<String> authorList, List<String> tagList,
                         String search, String sortField, String order,
                         Pageable pageable);
+
+    List<Post> findAll();
+
+    boolean isUserAuthorized(UserDetails userDetails, int postId);
 
 }

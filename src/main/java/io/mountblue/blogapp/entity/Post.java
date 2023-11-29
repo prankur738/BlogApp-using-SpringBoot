@@ -1,5 +1,6 @@
 package io.mountblue.blogapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -44,7 +45,7 @@ public class Post {
     private LocalDateTime publishedAt;
 
     @Column(name="is_published")
-    private boolean isPublished;
+    private boolean isPublished = true;
 
     @Column(name="created_at")
     @CreationTimestamp
@@ -54,9 +55,11 @@ public class Post {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @JsonIgnore
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "post")
     private List<Comment> comments;
 
+    @JsonIgnore
     @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name="post_tag",
@@ -65,6 +68,7 @@ public class Post {
     )
     private Set<Tag> tags = new HashSet<>();
 
+    @JsonIgnore
     @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     private User user;
 

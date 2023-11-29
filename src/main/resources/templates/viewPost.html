@@ -133,9 +133,6 @@
     </div>
 </div>
 
-<!--    <span th:if = "${#authorization.expression('hasRole(''ROLE_ADMIN'')') ||-->
-<!--    #authorization.expression('hasRole(''ROLE_AUTHOR'')')}">-->
-
 <h4>Add new Comment</h4>
 <form th:action="@{/saveComment/{postId}(postId=${post.id})}" th:object="${newComment}" method="POST">
 

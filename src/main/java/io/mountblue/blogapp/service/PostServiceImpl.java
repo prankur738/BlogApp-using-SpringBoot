@@ -9,6 +9,7 @@ import io.mountblue.blogapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
@@ -62,8 +63,8 @@ public class PostServiceImpl implements PostService{
     public void savePost(Post post, String tagString) {
         Set<Tag> tags = getTagsFromString(tagString);
         post.setTags(tags);
-        Optional<User> optionalUser = userRepository.findByUsername(post.getAuthor());
 
+        Optional<User> optionalUser = userRepository.findByUsername(post.getAuthor());
         if(optionalUser.isPresent()){
             post.setUser(optionalUser.get());
         }
@@ -78,6 +79,8 @@ public class PostServiceImpl implements PostService{
 
         newPost.setId(postId);
         newPost.setTags(tags);
+
+        newPost.setAuthor(oldPost.getAuthor());
         newPost.setComments(oldPost.getComments());
         newPost.setCreatedAt(oldPost.getCreatedAt());
         newPost.setPublishedAt(oldPost.getPublishedAt());
@@ -93,7 +96,6 @@ public class PostServiceImpl implements PostService{
         return postOptional.orElse(null);
     }
 
-    @Override
     public String getCommaSeperatedTags(int id) {
         Post post = findPostById(id);
         String tagString = "";
@@ -142,6 +144,29 @@ public class PostServiceImpl implements PostService{
         }
 
         return authors;
+    }
+
+    @Override
+    public List<Post> findAll() {
+        return postRepository.findAll();
+    }
+
+    @Override
+    public boolean isUserAuthorized(UserDetails userDetails, int postId){
+        Post post = findPostById(postId);
+
+        boolean isAuthorized = false;
+
+        if( userDetails==null){
+            return false;
+        }
+        else if(userDetails.getAuthorities().toString().contains("ROLE_ADMIN")){
+            isAuthorized = true;
+        } else if (userDetails.getUsername().equals(post.getAuthor())) {
+            isAuthorized = true;
+        }
+
+        return isAuthorized;
     }
 }
 
