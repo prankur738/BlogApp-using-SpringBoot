@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -93,8 +94,8 @@ public class PostController {
     @GetMapping("/")
     public String showAllPosts(
             @RequestParam(name = "page", defaultValue = "1") int pageNumber,
-            @RequestParam(name="author", required = false) List<String> authorList,
-            @RequestParam(name="tag",required = false) List<String> tagList,
+            @RequestParam(name="author", required = false) String authors,
+            @RequestParam(name="tag",required = false) String tags,
             @RequestParam(name="search", required = false) String search,
             @RequestParam(name="sortField", defaultValue = "publishedAt") String sortField,
             @RequestParam(name="order",defaultValue = "desc") String order,
@@ -102,18 +103,16 @@ public class PostController {
 
         Pageable pageable = PageRequest.of(pageNumber-1,6);
 
-        if (authorList == null) {
-            authorList = Collections.emptyList(); // Set to an empty list or provide default values
-        }
-        if (tagList == null) {
-            tagList = Collections.emptyList(); // Set to an empty list or provide default values
-        }
+        System.out.println(authors);
+        System.out.println(tags);
+        System.out.println(search);
+
+        Page<Post> posts = postService.getPosts(authors, tags, search, sortField, order, pageable);
+
         search = search==null ? "" : search;
+        authors = authors==null ? "" : authors;
+        tags = tags==null ? "" : tags;
 
-        Page<Post> posts = postService.getPosts(authorList, tagList, search, sortField, order, pageable);
-
-        String  authors = String.join("&author=", authorList);
-        String  tags = String.join("&tag=", tagList);
 
         model.addAttribute("search", search);
         model.addAttribute("authors", authors);
@@ -158,8 +157,6 @@ public class PostController {
         }
 
         return "accessDenied";
-
-
     }
 
     @GetMapping("/filterPosts")

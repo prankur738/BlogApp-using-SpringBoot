@@ -157,13 +157,13 @@
     <a th:href="@{/filterPosts}">
         <button>Filter</button>
     </a>
+
     <span th:if="${#authorization.expression('isAuthenticated()')}">
-<!--    <span th:if = "${#authorization.expression('hasRole(''ROLE_ADMIN'')') ||-->
-<!--    #authorization.expression('hasRole(''ROLE_AUTHOR'')')}">-->
     <a th:href="@{/newPost}">
         <button>Create Blog</button>
     </a>
     </span>
+
     <form th:action="@{'/'}">
 
         <select name="sortField">
@@ -176,11 +176,15 @@
             <option  value="desc">Descending</option>
         </select>
 
+        <input type="hidden" name="search" th:value="${search}"/>
+        <input type="hidden" name="tag" th:value="${tags}"/>
+        <input type="hidden" name="author" th:value="${authors}"/>
+
         <input type="submit" value="Sort">
 
     </form>
 
-    <form th:action="@{ '/'  }">
+    <form th:action="@{'/'}">
 
         <input name="search" placeholder="search"/>
         <input type="submit" value="Submit">

@@ -59,7 +59,6 @@ public class Post {
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "post")
     private List<Comment> comments;
 
-    @JsonIgnore
     @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name="post_tag",
@@ -68,7 +67,6 @@ public class Post {
     )
     private Set<Tag> tags = new HashSet<>();
 
-    @JsonIgnore
     @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     private User user;
 

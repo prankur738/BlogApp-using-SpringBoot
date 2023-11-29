@@ -1,6 +1,7 @@
 package io.mountblue.blogapp.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -18,10 +19,6 @@ public class User {
     @Column(name = "id")
     private int id;
 
-//    @NotNull(message = "Name cannot be empty")
-//    @Column(name="name")
-//    private String name;
-
     @NotNull(message = "Email cannot be empty")
     @Column(name = "username")
     private String username;
@@ -33,34 +30,8 @@ public class User {
     @Column(name = "enabled")
     private boolean enabled = true;
 
-//    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
-//    private Role role;
-
-//    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
-//    @JoinTable(name = "users_roles",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id"))
-//    private List<Role> roles = new ArrayList<>();
-
+    @JsonIgnore
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "user")
     private List<Post> posts;
-
-    public User() {
-    }
-//    public User(String name, String email, String password, boolean enabled) {
-//        this.name = name;
-//        this.email = email;
-//        this.password = password;
-//        this.enabled = enabled;
-//    }
-//
-//    public User(String name, String email, String password, boolean enabled,
-//                List<Role> roles) {
-//        this.name = name;
-//        this.email = email;
-//        this.password = password;
-//        this.enabled = enabled;
-//        this.roles = roles;
-//    }
 
 }

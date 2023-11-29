@@ -15,7 +15,7 @@ public interface PostService {
     void deletePostById(int id);
     String getCommaSeperatedTags(int id);
     Set<String> findDistinctAuthors();
-    Page<Post> getPosts(List<String> authorList, List<String> tagList,
+    Page<Post> getPosts(String authors, String tags,
                         String search, String sortField, String order,
                         Pageable pageable);
 

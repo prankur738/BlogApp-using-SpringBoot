@@ -3,12 +3,16 @@ package io.mountblue.blogapp.restcontroller;
 import io.mountblue.blogapp.entity.Post;
 import io.mountblue.blogapp.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -35,9 +39,23 @@ public class PostRestController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<List<Post>> showAllPosts(){
+    public ResponseEntity<List<Post>> showAllPosts(@RequestParam(name = "page", defaultValue = "1") int pageNumber,
+                                                   @RequestParam(name="author", required = false)
+                                                   String authors,
+                                                   @RequestParam(name="tag",required = false) String tags,
+                                                   @RequestParam(name="search", required = false) String search,
+                                                   @RequestParam(name="sortField", defaultValue = "publishedAt")
+                                                   String sortField,
+                                                   @RequestParam(name="order",defaultValue = "desc") String order
+                                                   ){
 
-        return new ResponseEntity<>(postService.findAll(), HttpStatus.OK);
+        Pageable pageable = PageRequest.of(pageNumber-1,6);
+
+        Page<Post> posts = postService.getPosts(authors, tags, search, sortField, order, pageable);
+
+        List<Post> postList = posts.getContent();
+
+        return new ResponseEntity<>(postList, HttpStatus.OK);
     }
 
     @GetMapping("/posts/{postId}")
@@ -60,7 +78,7 @@ public class PostRestController {
             return new ResponseEntity<>("Invalid Post id",HttpStatus.BAD_REQUEST);
         }
 
-        boolean isAuthorized = isUserAuthorized(userDetails, postId);
+        boolean isAuthorized = postService.isUserAuthorized(userDetails, postId);
 
         if(isAuthorized){
             postService.updatePost(post, postId, tags);
@@ -78,7 +96,7 @@ public class PostRestController {
             return new ResponseEntity<>("Invalid Post id",HttpStatus.BAD_REQUEST);
         }
 
-        boolean isAuthorized = isUserAuthorized(userDetails,postId);
+        boolean isAuthorized = postService.isUserAuthorized(userDetails, postId);
 
         if(isAuthorized){
             postService.deletePostById(postId);
@@ -88,20 +106,5 @@ public class PostRestController {
         return new ResponseEntity<>("Access Denied",HttpStatus.UNAUTHORIZED);
     }
 
-    private boolean isUserAuthorized(UserDetails userDetails, int postId){
-        Post post = postService.findPostById(postId);
-        boolean isAuthorized = false;
-
-        if( userDetails==null){
-            return false;
-        }
-        else if(userDetails.getAuthorities().toString().contains("ROLE_ADMIN")){
-            isAuthorized = true;
-        } else if (userDetails.getUsername().equals(post.getAuthor())) {
-            isAuthorized = true;
-        }
-
-        return isAuthorized;
-    }
 
 }

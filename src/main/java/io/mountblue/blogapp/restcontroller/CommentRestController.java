@@ -45,7 +45,7 @@ public class CommentRestController {
     }
 
     @GetMapping("/comments/{postId}")
-    public ResponseEntity<List<Comment>> showAllCommentsByPostId(@RequestParam("postId") int postId){
+    public ResponseEntity<List<Comment>> showAllCommentsByPostId(@PathVariable("postId") int postId){
         Post post = postService.findPostById(postId);
 
         if(post == null){
@@ -69,12 +69,25 @@ public class CommentRestController {
             return new ResponseEntity<>("Invalid",HttpStatus.BAD_REQUEST);
         }
 
-        comment.setId(oldComment.getId());
+        comment.setId(commentId);
         commentService.updateComment(comment,postId);
 
         return new ResponseEntity<>("Comment updated successfully",HttpStatus.OK);
-
     }
+
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<String> deleteCommentById(@PathVariable("commentId") int commentId){
+        Comment comment = commentService.findById(commentId);
+
+        if(comment == null){
+            return new ResponseEntity<>("Invalid Comment Id",HttpStatus.BAD_REQUEST);
+        }
+
+        commentService.deleteCommentById(commentId);
+
+        return new ResponseEntity<>("Comment deleted successfully",HttpStatus.OK);
+    }
+
 
 
 

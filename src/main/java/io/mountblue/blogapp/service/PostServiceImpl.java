@@ -26,15 +26,19 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Page<Post> getPosts(List<String> authorList, List<String> tagList,
+    public Page<Post> getPosts(String authors, String tags,
                                String search, String sortField,
                                String order, Pageable pageable){
+
         Page<Post> posts = postRepository.findAll(pageable);
 
-        if(!search.isEmpty()){
-            posts = postRepository.getPostsBySearch(search, pageable);
+        List<String> authorList = null;
+        List<String> tagList = null;
+
+        if(search != null){
+            posts = postRepository.getPostsBySearch(search, sortField, order, pageable);
         }
-        else if(authorList.isEmpty() && tagList.isEmpty()){
+        else if(authors==null && tags==null){
 
                 if(sortField.equals("author") && order.equals("asc")){
                     return postRepository.findAllByOrderByAuthorAsc(pageable);
@@ -50,8 +54,15 @@ public class PostServiceImpl implements PostService{
                 }
         }
         else{
-            authorList = authorList.isEmpty() ? null : authorList;
-            tagList = tagList.isEmpty() ? null : tagList;
+            if(authors!=null){
+                String[] authorArray = authors.split(",");
+                authorList = Arrays.asList(authorArray);
+            }
+            if(tags!=null){
+                String[] tagArray = tags.split(",");
+                tagList = Arrays.asList(tagArray);
+            }
+
             return postRepository.findByAuthorInAndTags_NameIn(authorList, tagList, sortField, order, pageable);
         }
 
