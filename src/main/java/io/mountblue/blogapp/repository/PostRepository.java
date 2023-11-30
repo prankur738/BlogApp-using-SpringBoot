@@ -25,13 +25,13 @@ public interface PostRepository extends JpaRepository<Post,Integer> {
             "CASE WHEN :sortField = 'author' AND :order = 'asc' THEN p.author END ASC, "+
             "CASE WHEN :sortField = 'author' AND :order = 'desc' THEN p.author END DESC, "+
             "CASE WHEN :sortField = 'publishedAt' AND :order = 'asc' THEN p.publishedAt END ASC, "+
-            "CASE WHEN :sortField = 'publishedAt' AND :order = 'desc' THEN p.publishedAt END DESC, "+
-            "p.title ASC"
+            "CASE WHEN :sortField = 'publishedAt' AND :order = 'desc' THEN p.publishedAt END DESC"
     )
     Page<Post> getPostsBySearch(@Param("query") String query,
                                 @Param("sortField") String sortField,
                                 @Param("order") String order,
                                 Pageable pageable);
+
     @Query("SELECT p from Post p LEFT JOIN p.tags t ON "+
             "COALESCE(t.name, '') IN :tags "+
             "WHERE (:authors IS NULL OR p.author IN :authors) AND "+

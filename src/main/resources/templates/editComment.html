@@ -19,8 +19,6 @@
         }
 
         .post_container {
-            /*margin: 20px auto;*/
-            /*margin-top: 10px;*/
             margin: auto;
             padding: 10px;
             border: 1px solid #ccc;
@@ -93,18 +91,17 @@
 
 <h2>Update Comment</h2>
 
-<form th:action="@{/updateComment/{postId}/{commentId}(postId=${postId},commentId=${com.id})}"
-      th:object="${com}" method="POST">
+<form th:action = " @{/updateComment/{postId}/{commentId}(postId=${postId} , commentId=${editedComment.id})} "
+      th:object="${editedComment}" method="POST">
 
-    Name: <span th:text="${com.name}"></span><br>
-    Email: <span th:text="${com.email}"></span><br>
+    Name: <span th:text="${editedComment.name}"></span><br>
+    Email: <span th:text="${editedComment.email}"></span><br>
     <label for="updatedComment">Comment: </label><br>
-     <textarea id="updatedComment" rows="4" th:field="${com.comment}"></textarea><br>
+     <textarea id="updatedComment" rows="4" th:field="${editedComment.comment}"></textarea><br>
 
     <input type="submit" value="Submit">
 
 </form>
-
 
 </body>
 </html>

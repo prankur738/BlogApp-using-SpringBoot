@@ -18,6 +18,7 @@ public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
+
     @Autowired
     PostServiceImpl(PostRepository postRepository, TagRepository tagRepository, UserRepository userRepository){
         this.postRepository = postRepository;
@@ -69,7 +70,6 @@ public class PostServiceImpl implements PostService{
         return  posts;
     }
 
-
     @Override
     public void savePost(Post post, String tagString) {
         Set<Tag> tags = getTagsFromString(tagString);
@@ -84,13 +84,13 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void updatePost(Post newPost, int postId, String tagString) {
+    public void updatePost(Post newPost, Integer postId, String tagString) {
         Post oldPost = findPostById(postId);
+
         Set<Tag> tags = getTagsFromString(tagString);
 
         newPost.setId(postId);
         newPost.setTags(tags);
-
         newPost.setAuthor(oldPost.getAuthor());
         newPost.setComments(oldPost.getComments());
         newPost.setCreatedAt(oldPost.getCreatedAt());
@@ -102,25 +102,17 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Post findPostById(int id) {
+    public Post findPostById(Integer id) {
         Optional<Post> postOptional = postRepository.findById(id);
+
         return postOptional.orElse(null);
     }
 
-    public String getCommaSeperatedTags(int id) {
-        Post post = findPostById(id);
-        String tagString = "";
-
-        for(Tag tag : post.getTags()){
-            tagString += tag.getName()+", ";
-        }
-        return tagString;
-    }
-
     @Override
-    public void deletePostById(int id) {
+    public void deletePostById(Integer id) {
         postRepository.deleteById(id);
     }
+
     private Set<Tag> getTagsFromString(String tagString){
         Set<Tag> tags = new HashSet<>();
 
@@ -128,7 +120,6 @@ public class PostServiceImpl implements PostService{
             String[] tagNames = tagString.split(",");
 
             for (String tagName : tagNames) {
-
                 String tag = tagName.trim();
                 Optional<Tag> tagOptional = tagRepository.findByName(tag);
 
@@ -142,12 +133,14 @@ public class PostServiceImpl implements PostService{
                 }
             }
         }
+
         return tags;
     }
+
     @Override
     public Set<String> findDistinctAuthors() {
-
         List<Post> posts = postRepository.findAll();
+
         Set<String> authors = new HashSet<>();
 
         for(Post post : posts){
@@ -163,7 +156,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public boolean isUserAuthorized(UserDetails userDetails, int postId){
+    public boolean isUserAuthorized(UserDetails userDetails, Integer postId){
         Post post = findPostById(postId);
 
         boolean isAuthorized = false;
@@ -179,5 +172,18 @@ public class PostServiceImpl implements PostService{
 
         return isAuthorized;
     }
+
+    public String getCommaSeperatedTags(Integer id) {
+        Post post = findPostById(id);
+
+        String tagString = "";
+
+        for(Tag tag : post.getTags()){
+            tagString += tag.getName()+", ";
+        }
+
+        return tagString;
+    }
+
 }
 

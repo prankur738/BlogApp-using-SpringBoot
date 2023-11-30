@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class UserController {
-
     private final UserService userService;
 
     @Autowired
@@ -25,7 +24,9 @@ public class UserController {
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model){
+
         model.addAttribute("user",new User());
+
         return "userRegistration";
     }
 
@@ -33,12 +34,14 @@ public class UserController {
     public String processNewUser(@ModelAttribute("user") User user, Model model){
 
         String username = user.getUsername();
+
         if(userService.isUserExists(username)){
             model.addAttribute("error", "Username already exists");
             return "userRegistration";
         }
 
         userService.saveUser(user);
+
         return "redirect:/loginPage";
     }
 

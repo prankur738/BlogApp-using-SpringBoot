@@ -5,11 +5,11 @@ import io.mountblue.blogapp.entity.Comment;
 import java.util.List;
 
 public interface CommentService {
-    void saveComment(Comment comment, int postId);
-    void updateComment(Comment comment, int postId);
-    void deleteCommentById(int commentId);
-    Comment getCommentById(int commentId);
+    void saveComment(Comment comment, Integer postId);
+    void updateComment(Comment comment, Integer postId);
+    void deleteCommentById(Integer commentId);
+    Comment getCommentById(Integer commentId);
     List<Comment> findAll();
-    Comment findById(int commentId);
+    Comment findById(Integer commentId);
 
 }

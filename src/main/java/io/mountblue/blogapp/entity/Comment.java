@@ -16,8 +16,9 @@ public class Comment {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
+    @Column(name= "name")
     private String name;
 
     @Column(name="email")
@@ -34,8 +35,7 @@ public class Comment {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @ManyToOne(cascade={CascadeType.DETACH,CascadeType.MERGE,
-    CascadeType.PERSIST,CascadeType.REFRESH})
+    @ManyToOne(cascade={CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name="post_id")
     private Post post;
 

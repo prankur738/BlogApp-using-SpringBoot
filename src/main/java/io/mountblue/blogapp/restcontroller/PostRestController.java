@@ -33,13 +33,14 @@ public class PostRestController {
             return new ResponseEntity<>("Access Denied",HttpStatus.FORBIDDEN);
         }
 
+        post.setAuthor(userDetails.getUsername());
         postService.savePost(post, tags);
 
         return new ResponseEntity<>("New Post added successfully",HttpStatus.CREATED);
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<List<Post>> showAllPosts(@RequestParam(name = "page", defaultValue = "1") int pageNumber,
+    public ResponseEntity<List<Post>> showAllPosts(@RequestParam(name = "page", defaultValue = "1") Integer pageNumber,
                                                    @RequestParam(name="author", required = false)
                                                    String authors,
                                                    @RequestParam(name="tag",required = false) String tags,
@@ -59,7 +60,8 @@ public class PostRestController {
     }
 
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<Post> showPostById(@PathVariable("postId") int postId){
+    public ResponseEntity<Post> showPostById(@PathVariable("postId") Integer postId){
+
         Post post = postService.findPostById(postId);
 
         if(post==null){
@@ -71,26 +73,32 @@ public class PostRestController {
 
     @PutMapping("/posts/{postId}")
     public ResponseEntity<String> updateExistingPostById(@AuthenticationPrincipal UserDetails userDetails,
-                                         @PathVariable("postId") int postId, @RequestBody Post post,
-                                         @RequestParam("tags") String tags){
+                                                         @PathVariable("postId") Integer postId,
+                                                         @RequestBody Post post,
+                                                         @RequestParam("tags") String tags){
 
-        if( postService.findPostById(postId) == null){
+        Post postById = postService.findPostById(postId);
+
+        if( postById == null){
             return new ResponseEntity<>("Invalid Post id",HttpStatus.BAD_REQUEST);
         }
 
-        boolean isAuthorized = postService.isUserAuthorized(userDetails, postId);
+        boolean userAuthorized = postService.isUserAuthorized(userDetails, postId);
 
-        if(isAuthorized){
+        if(userAuthorized){
+            post.setAuthor(postById.getAuthor());
             postService.updatePost(post, postId, tags);
+
             return new ResponseEntity<>("Post updated successfully",HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>("Access Denied",HttpStatus.FORBIDDEN);
+        }
+        else{
+            return new ResponseEntity<>("Access Denied",HttpStatus.UNAUTHORIZED);
         }
     }
 
     @DeleteMapping("/posts/{postId}")
     public ResponseEntity<String> deleteExistingPostById(@AuthenticationPrincipal UserDetails userDetails,
-                                                         @PathVariable("postId") int postId){
+                                                         @PathVariable("postId") Integer postId){
 
         if( postService.findPostById(postId) == null){
             return new ResponseEntity<>("Invalid Post id",HttpStatus.BAD_REQUEST);

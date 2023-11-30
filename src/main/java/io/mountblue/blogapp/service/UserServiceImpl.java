@@ -24,6 +24,7 @@ public class UserServiceImpl implements UserService{
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
     @Override
     public void saveUser(User user) {
         String username = user.getUsername();
@@ -45,4 +46,5 @@ public class UserServiceImpl implements UserService{
 
         return user.isPresent();
     }
+
 }

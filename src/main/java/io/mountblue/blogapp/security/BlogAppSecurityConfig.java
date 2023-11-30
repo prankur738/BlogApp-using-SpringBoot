@@ -2,6 +2,7 @@ package io.mountblue.blogapp.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,6 +25,7 @@ public class BlogAppSecurityConfig {
 
     @Bean
     public UserDetailsManager userDetailsManager(DataSource dataSource){
+
         JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
 
         userDetailsManager.setUsersByUsernameQuery("select username, password, enabled from users where username=?");
@@ -41,7 +43,8 @@ public class BlogAppSecurityConfig {
                 .authorizeHttpRequests(configurer ->
                 configurer
                         .requestMatchers("/register","/processNewUser","/",
-                                "/filterPosts","/viewPost","/api/**").permitAll()
+                                "/filterPosts","/viewPost/{postId}","/api/**",
+                                "/saveComment/{postId}").permitAll()
                         .requestMatchers("/**").hasAnyRole("AUTHOR","ADMIN")
                         .anyRequest().authenticated()
         )
@@ -49,16 +52,20 @@ public class BlogAppSecurityConfig {
                         configurer
                                 .accessDeniedPage("/access-denied")
                 )
+
                 .formLogin(form ->
                         form
                                 .loginPage("/loginPage")
                                 .loginProcessingUrl("/authenticateUser")
+                                .successForwardUrl("/")
                                 .permitAll()
                 )
+
                 .logout(logout -> logout.permitAll()
                 );
         httpSecurity.httpBasic(Customizer.withDefaults());
 
         return httpSecurity.build();
     }
+
 }

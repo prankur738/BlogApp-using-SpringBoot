@@ -15,7 +15,7 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @Column(name="username")
     private String username;
@@ -23,14 +23,4 @@ public class Role {
     @Column(name = "role")
     private String role;
 
-//    @OneToMany(cascade={CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH},
-//            mappedBy = "role")
-//    private List<User> users = new ArrayList<>();
-
-    public Role() {
-    }
-
-//    public Role(String name) {
-//        this.name = name;
-//    }
 }

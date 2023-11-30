@@ -10,10 +10,10 @@ import java.util.Set;
 
 public interface PostService {
     void savePost(Post post, String tagString);
-    void updatePost(Post newPost, int postId, String tagString);
-    Post findPostById(int id);
-    void deletePostById(int id);
-    String getCommaSeperatedTags(int id);
+    void updatePost(Post newPost, Integer postId, String tagString);
+    Post findPostById(Integer id);
+    void deletePostById(Integer id);
+    String getCommaSeperatedTags(Integer id);
     Set<String> findDistinctAuthors();
     Page<Post> getPosts(String authors, String tags,
                         String search, String sortField, String order,
@@ -21,6 +21,6 @@ public interface PostService {
 
     List<Post> findAll();
 
-    boolean isUserAuthorized(UserDetails userDetails, int postId);
+    boolean isUserAuthorized(UserDetails userDetails, Integer postId);
 
 }

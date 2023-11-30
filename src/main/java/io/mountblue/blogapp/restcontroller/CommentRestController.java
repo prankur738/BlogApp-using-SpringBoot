@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("/api")
 @RestController
 public class CommentRestController {
-
     private final CommentService commentService;
     private final PostService postService;
 
@@ -27,7 +26,7 @@ public class CommentRestController {
     }
 
     @PostMapping("/comments/{postId}")
-    public ResponseEntity<String> saveNewComment(@PathVariable("postId") int postId,
+    public ResponseEntity<String> saveNewComment(@PathVariable("postId") Integer postId,
                                                  @RequestBody Comment comment){
 
         if( postService.findPostById(postId) == null){
@@ -45,7 +44,8 @@ public class CommentRestController {
     }
 
     @GetMapping("/comments/{postId}")
-    public ResponseEntity<List<Comment>> showAllCommentsByPostId(@PathVariable("postId") int postId){
+    public ResponseEntity<List<Comment>> showAllCommentsByPostId(@PathVariable("postId") Integer postId){
+
         Post post = postService.findPostById(postId);
 
         if(post == null){
@@ -57,16 +57,17 @@ public class CommentRestController {
 
     @PutMapping("/comments/{postId}/{commentId}")
     public ResponseEntity<String> updateCommentById(@AuthenticationPrincipal UserDetails userDetails,
-                                                    @PathVariable("postId") int postId,
-                                                    @PathVariable("commentId") int commentId,
+                                                    @PathVariable("postId") Integer postId,
+                                                    @PathVariable("commentId") Integer commentId,
                                                     @RequestBody Comment comment){
 
         Post post = postService.findPostById(postId);
         Comment oldComment = commentService.getCommentById(commentId);
-        boolean isAuthorized = postService.isUserAuthorized(userDetails, postId);
 
-        if(post==null || oldComment == null || !isAuthorized){
-            return new ResponseEntity<>("Invalid",HttpStatus.BAD_REQUEST);
+        boolean userAuthorized = postService.isUserAuthorized(userDetails, postId);
+
+        if(post==null || oldComment == null || !userAuthorized){
+            return new ResponseEntity<>("Invalid Request",HttpStatus.BAD_REQUEST);
         }
 
         comment.setId(commentId);
@@ -75,22 +76,25 @@ public class CommentRestController {
         return new ResponseEntity<>("Comment updated successfully",HttpStatus.OK);
     }
 
-    @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<String> deleteCommentById(@PathVariable("commentId") int commentId){
-        Comment comment = commentService.findById(commentId);
+    @DeleteMapping("/comments/{postId}/{commentId}")
+    public ResponseEntity<String> deleteCommentById(@AuthenticationPrincipal UserDetails userDetails,
+                                                    @PathVariable("postId") Integer postId,
+                                                    @PathVariable("commentId") Integer commentId){
 
-        if(comment == null){
+        if(postService.findPostById(postId) == null){
+            return new ResponseEntity<>("Invalid Post Id",HttpStatus.BAD_REQUEST);
+        }
+
+        if(commentService.findById(commentId) == null){
             return new ResponseEntity<>("Invalid Comment Id",HttpStatus.BAD_REQUEST);
         }
 
-        commentService.deleteCommentById(commentId);
+        if(postService.isUserAuthorized(userDetails, postId)){
+            commentService.deleteCommentById(commentId);
+            return new ResponseEntity<>("Comment deleted successfully",HttpStatus.OK);
+        }
 
-        return new ResponseEntity<>("Comment deleted successfully",HttpStatus.OK);
+        return new ResponseEntity<>("Unauthorized User",HttpStatus.UNAUTHORIZED);
     }
-
-
-
-
-
 
 }

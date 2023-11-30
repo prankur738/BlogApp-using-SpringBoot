@@ -15,13 +15,16 @@ public class CommentServiceImpl implements CommentService{
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+
     @Autowired
     CommentServiceImpl(PostRepository postRepository, CommentRepository commentRepository){
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
     }
+
     @Override
-    public void saveComment(Comment comment, int postId) {
+    public void saveComment(Comment comment, Integer postId) {
+
         Optional<Post> postOptional = postRepository.findById(postId);
 
         if(postOptional.isPresent()){
@@ -30,19 +33,24 @@ public class CommentServiceImpl implements CommentService{
             comment.setPost(post);
             commentRepository.save(comment);
         }
+
     }
+
     @Override
-    public void deleteCommentById(int commentId) {
+    public void deleteCommentById(Integer commentId) {
         commentRepository.deleteById(commentId);
     }
+
     @Override
-    public Comment getCommentById(int commentId) {
+    public Comment getCommentById(Integer commentId) {
         Optional<Comment> commentOptional = commentRepository.findById(commentId);
 
         return commentOptional.orElse(null);
     }
+
     @Override
-    public void updateComment(Comment comment, int postId) {
+    public void updateComment(Comment comment, Integer postId) {
+
         Comment commentById = getCommentById(comment.getId());
 
         comment.setName(commentById.getName());
@@ -58,7 +66,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public Comment findById(int commentId) {
+    public Comment findById(Integer commentId) {
         Optional<Comment> commentOptional = commentRepository.findById(commentId);
 
         return commentOptional.orElse(null);

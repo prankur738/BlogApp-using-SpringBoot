@@ -185,13 +185,9 @@
     </form>
 
     <form th:action="@{'/'}">
-
         <input name="search" placeholder="search"/>
         <input type="submit" value="Submit">
-
     </form>
-
-
 
 </header>
 
@@ -214,23 +210,19 @@
             </div>
         </div>
 
-        <form th:action="@{/viewPost}">
-
-            <input type="hidden"  name="postId" th:value="${post.id}"/>
+        <form th:action="@{/viewPost/{postId}(postId=${post.id})}">
             <input type="submit" value="View"/>
-
         </form>
+
         <span th:if="${#authorization.expression('isAuthenticated()')}">
-        <div th:if = "${#authorization.expression('hasRole(''ROLE_ADMIN'')') ||
+            <div th:if = "${#authorization.expression('hasRole(''ROLE_ADMIN'')') ||
         #authentication.principal.username == post.author}">
 
-        <form th:action="@{/editPost}">
-            <input type="hidden"  name="postId" th:value="${post.id}"/>
+        <form th:action="@{/editPost/{postId}(postId=${post.id})}">
             <input type="submit" value="Edit"/>
         </form>
 
-        <form th:action="@{/deletePost}" method="post">
-            <input type="hidden"  name="postId" th:value="${post.id}"/>
+        <form th:action="@{/deletePost/{postId}(postId=${post.id})}" method="post">
             <input type="submit" value="Delete"/>
         </form>
 

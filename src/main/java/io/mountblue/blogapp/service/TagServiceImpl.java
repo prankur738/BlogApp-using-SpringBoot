@@ -9,12 +9,15 @@ import java.util.List;
 @Service
 public class TagServiceImpl implements TagService{
    private final TagRepository tagRepository;
+
    @Autowired
    TagServiceImpl(TagRepository tagRepository){
        this.tagRepository = tagRepository;
    }
+
     @Override
     public List<Tag> getAllTags(){
         return tagRepository.findAll();
     }
+
 }
